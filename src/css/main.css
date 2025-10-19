@@ -11,48 +11,24 @@
 }
 
 .component-kv__headline {
-  margin-top: 50px;
+  margin-top: 150px;
 }
 .component-kv__headline-text {
   position: relative;
-  font-size: 180px;
-  line-height: 0.5;
+  display: inline-block;
+  font-size: 280px;
+  line-height: 0.9;
   font-family: "Fjalla One", sans-serif;
   letter-spacing: -0.05em;
 }
 @media screen and (min-width: 1920px) {
   .component-kv__headline-text {
-    font-size: 250px;
+    font-size: 350px;
   }
 }
-.component-kv__headline-text::after {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  display: block;
-  text-transform: uppercase;
+.component-kv__headline-up .component-kv__headline-text {
+  transform-origin: bottom;
 }
-.component-kv__headline-text--d::after {
-  content: "d";
-}
-.component-kv__headline-text--o::after {
-  content: "o";
-}
-.component-kv__headline-text--g::after {
-  content: "g";
-}
-.component-kv__headline-text--y::after {
-  content: "y";
-}
-.component-kv__headline-text--e::after {
-  content: "e";
-}
-.component-kv__headline-text--o::after {
-  content: "o";
-}
-.component-kv__headline-text--n::after {
-  content: "n";
-}
-.component-kv__headline-text--g::after {
-  content: "g";
+.component-kv__headline-under .component-kv__headline-text {
+  transform-origin: top;
 }
