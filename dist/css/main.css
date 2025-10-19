@@ -1,1 +1,58 @@
+.blind {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
 
+.component-kv__headline {
+  margin-top: 50px;
+}
+.component-kv__headline-text {
+  position: relative;
+  font-size: 180px;
+  line-height: 0.5;
+  font-family: "Fjalla One", sans-serif;
+  letter-spacing: -0.05em;
+}
+@media screen and (min-width: 1920px) {
+  .component-kv__headline-text {
+    font-size: 250px;
+  }
+}
+.component-kv__headline-text::after {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  display: block;
+  text-transform: uppercase;
+}
+.component-kv__headline-text--d::after {
+  content: "d";
+}
+.component-kv__headline-text--o::after {
+  content: "o";
+}
+.component-kv__headline-text--g::after {
+  content: "g";
+}
+.component-kv__headline-text--y::after {
+  content: "y";
+}
+.component-kv__headline-text--e::after {
+  content: "e";
+}
+.component-kv__headline-text--o::after {
+  content: "o";
+}
+.component-kv__headline-text--n::after {
+  content: "n";
+}
+.component-kv__headline-text--g::after {
+  content: "g";
+}

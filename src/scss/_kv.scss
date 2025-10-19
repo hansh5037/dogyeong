@@ -1,0 +1,54 @@
+.component-kv {
+	&__headline {
+		margin-top: 50px;
+		&-text {
+			position: relative;
+			font-size: 180px;
+			line-height: .5;
+			font-family: "Fjalla One", sans-serif;
+			letter-spacing: -.05em;
+			@media screen and (min-width: 1920px) {
+				font-size: 250px;
+			}
+			&::after {
+				position: absolute;
+				top: 100%;
+				left: 0;
+				display: block;
+				text-transform: uppercase;
+			}
+			&--d::after {
+				content: 'd';
+			}
+			&--o::after {
+				content: 'o';
+			}
+			&--g::after {
+				content: 'g';
+			}
+			&--y::after {
+				content: 'y';
+			}
+			&--e::after {
+				content: 'e';
+			}
+			&--o::after {
+				content: 'o';
+			}
+			&--n::after {
+				content: 'n';
+			}
+			&--g::after {
+				content: 'g';
+			}
+		}
+	}
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024) {
+	
+}
+	
+@media screen and (min-width: 768px) {
+
+}
