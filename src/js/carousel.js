@@ -1,4 +1,5 @@
-export function initKV() {
+window.component = window.component || {};
+window.component.carousel = (function () {
 	let els = {};
 
 	const init = function () {
@@ -13,6 +14,9 @@ export function initKV() {
 	const setElemets = function () {};
 	const BindEvents = function () {};
 	const eventHandler = function () {};
-	const eventsList = function () {};
+	const eventsList = {};
 	const accessibility = function () {};
-}
+	return {
+		init: init
+	}
+})();

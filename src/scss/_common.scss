@@ -9,3 +9,17 @@
 	white-space: nowrap;
 	border: 0;
 }
+
+.common {
+	&-fixed {
+		&-track {
+			position: relative;
+		}
+		&-inner {
+			position: sticky;
+			top: 0;
+			height: 100dvh;
+			overflow: hidden;
+		}
+	}
+}

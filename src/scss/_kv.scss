@@ -1,6 +1,17 @@
 .component-kv {
+	&__wrap {
+		display: flex;
+		justify-content: center;
+		align-items: anchor-center;
+	}
 	&__headline {
-		margin-top: 150px;
+		height: 252px;
+		@media screen and (min-width: 1920px) {
+			height: 315px;
+		}
+		&-bottom {
+			transform: scaleY(0);
+		}
 		&-text {
 			position: relative;
 			display: inline-block;
@@ -11,11 +22,14 @@
 			@media screen and (min-width: 1920px) {
 				font-size: 350px;
 			}
-			.component-kv__headline-up & {
+			.component-kv__headline-top & {
 				transform-origin: bottom;
 			}
-			.component-kv__headline-under & {
+			.component-kv__headline-bottom & {
 				transform-origin: top;
+			}
+			&.is-active {
+				transform: scaleY(1);
 			}
 		}
 	}
