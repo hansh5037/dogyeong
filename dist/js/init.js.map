@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../src/js/kv.js", "../../src/js/carousel.js", "../../src/js/init.js"],
+  "sourcesContent": ["export function initKV() {\n  // KV \uCEF4\uD3EC\uB10C\uD2B8 \uCD08\uAE30\uD654 \uB85C\uC9C1\n  console.log(\"KV initialized\");\n}\n", "export function initCarousel() {\n  // Carousel \uCD08\uAE30\uD654 \uB85C\uC9C1\n  console.log(\"Carousel initialized\");\n  // \uC608: document.querySelector('.carousel') \uB85C \uB0B4\uBD80 \uB3D9\uC791 setup\n}\n", "import { initKV } from \"./kv.js\";       // \uD30C\uC77C\uBA85 \uC815\uD655\uD788!\nimport { initCarousel } from \"./carousel.js\";\nwindow.addEventListener(\"DOMContentLoaded\", () => {\n\tinitKV();\n\tinitCarousel();\n});\n"],
+  "mappings": ";AAAO,SAAS,SAAS;AAEvB,UAAQ,IAAI,gBAAgB;AAC9B;;;ACHO,SAAS,eAAe;AAE7B,UAAQ,IAAI,sBAAsB;AAEpC;;;ACFA,OAAO,iBAAiB,oBAAoB,MAAM;AACjD,SAAO;AACP,eAAa;AACd,CAAC;",
+  "names": []
+}
