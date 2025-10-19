@@ -1,0 +1,13 @@
+{
+	"scripts": {
+		"dev": "run-p dev:*",
+		"dev:eleventy": "eleventy --serve",
+		"dev:sass": "sass --watch src/scss/main.scss src/css/main.css --no-source-map",
+		"dev:js": "esbuild src/js/init.js --bundle --format=esm --sourcemap --outfile=dist/js/init.js --watch",
+		"build": "run-s clean build:eleventy build:sass build:js",
+		"build:eleventy": "eleventy",
+		"build:sass": "sass src/scss/main.scss src/css/main.css --style=compressed --no-source-map",
+		"build:js": "esbuild src/js/init.js --bundle --format=esm --minify --outfile=dist/js/init.js",
+		"clean": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\""
+	}
+}
