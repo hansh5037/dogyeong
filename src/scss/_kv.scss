@@ -3,14 +3,33 @@
 		display: flex;
 		justify-content: center;
 		align-items: anchor-center;
+		background-color: #bdd5dd;
 	}
 	&__headline {
 		height: 252px;
 		@media screen and (min-width: 1920px) {
 			height: 315px;
 		}
-		&-bottom {
-			transform: scaleY(0);
+		&-position {
+			position: absolute;
+			display: flex;
+    		justify-content: center;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 100%;
+			&--bottom {
+				.component-kv__headline-text {
+					transform: scaleY(0);
+					transform-origin: bottom;
+				}
+			}
+			&--top {
+				.component-kv__headline-text {
+					transform-origin: top;
+
+				}
+			}
 		}
 		&-text {
 			position: relative;
@@ -19,14 +38,9 @@
 			line-height: .9;
 			font-family: "Fjalla One", sans-serif;
 			letter-spacing: -.05em;
+			transition-duration: .2s;
 			@media screen and (min-width: 1920px) {
 				font-size: 350px;
-			}
-			.component-kv__headline-top & {
-				transform-origin: bottom;
-			}
-			.component-kv__headline-bottom & {
-				transform-origin: top;
 			}
 			&.is-active {
 				transform: scaleY(1);
