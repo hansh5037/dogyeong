@@ -3,12 +3,15 @@
 		display: flex;
 		justify-content: center;
 		align-items: anchor-center;
-		background-color: #d1d6d8;
+		background-color: #c4c6c7;
+		background-image: url(/images/noise.svg);
 	}
 	&__headline {
-		height: 252px;
+		height: 300px;
+		width: 100%;
+		border-bottom: 1px solid;
 		@media screen and (min-width: 1920px) {
-			height: 315px;
+			height: 360px;
 		}
 		&-position {
 			position: absolute;
@@ -45,10 +48,25 @@
 	}
 }
 
-@media screen and (min-width: 769px) and (max-width: 1024) {
-	
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+	.component-kv {
+		&__headline {
+			height: 200px;
+			&-text {
+				font-size: 180px;
+			}
+		}
+	}
 }
 	
-@media screen and (min-width: 768px) {
-
+@media screen and (max-width: 768px) {
+	.component-kv {
+		&__headline {
+			height: 25vw;
+			// @include vw-convert-mo(height, 91);
+			&-text {
+				font-size: 22vw;
+			}
+		}
+	}
 }

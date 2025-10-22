@@ -13,9 +13,9 @@ window.component.carousel = (function () {
 
 	const setElemets = function () {};
 	const BindEvents = function () {};
-	const eventHandler = function () {};
+	const eventHandler = {};
 	const eventsList = {};
-	const accessibility = function () {};
+	const accessibility = {};
 	return {
 		init: init
 	}

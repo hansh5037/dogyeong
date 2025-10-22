@@ -26,6 +26,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
     line-height: 1;
+	cursor:pointer;
 }
 ol, ul {
     list-style: none;
@@ -65,6 +66,97 @@ table {
 			top: 0;
 			height: 100dvh;
 			overflow: hidden;
+		}
+	}
+	&-cursor {
+		@media screen and (min-width: 1024px) {
+			position:fixed;
+			left:0;
+			top:0;
+			pointer-events:none;/*요소가 포인터 이벤트의 대상이 되지 않는다.*/
+			width:150px;
+			height:150px;
+			background-color: #E07D9B;
+			opacity: .8;
+			border:1px solid #E07D9B;
+			border-radius:50%;
+			transform: translate(-50%,-50%);
+			z-index: 1;
+			mix-blend-mode: exclusion
+		}
+	}
+}
+
+// vw conversion Mobile
+@mixin vw-convert-mo($property, $mo-pixel){
+	@if type-of($mo-pixel) == number {
+		#{$property}: $mo-pixel/360*768*1px;
+		#{$property}: $mo-pixel*100/360*1vw;
+		@media (max-width:360px) {
+			#{$property}: $mo-pixel*1px;
+			#{$property}: $mo-pixel*100/360*1vw;
+		}
+	}
+	@else if type-of($mo-pixel) == string {
+		#{$property}: auto;
+		@media (max-width:360px) {
+			#{$property}: auto;
+		}
+	}
+	@else if type-of($mo-pixel) == list {
+		$px: ();
+		$vw: ();
+		@each $value in $mo-pixel {
+			@if type-of($value) == number {
+				$px: append($px, $value/360*768*1px);
+				$vw: append($vw, $value*100/360*1vw);
+			}
+			@else if type-of($value) == string {
+				$px: append($px, auto);
+				$vw: append($vw, auto);
+			}
+		}
+		#{$property}:$px;
+		#{$property}:$vw;
+
+		$px: ();
+		$vw: ();
+		@each $value in $mo-pixel {
+			@if type-of($value) == number {
+				$px: append($px, $value*1px);
+				$vw: append($vw, $value*100/360*1vw);
+			}
+			@else if type-of($value) == string {
+				$px: append($px, auto);
+				$vw: append($vw, auto);
+			}
+		}
+		@media (max-width:360px) {
+			#{$property}:$px;
+			#{$property}:$vw;
+		}
+	}
+}
+@mixin vw-font-size-mo($mo-pixel) {
+	font-size: $mo-pixel/360*768*1px;
+	font-size: $mo-pixel*100/360*1vw;
+	@media (max-width:360px) {
+		font-size: $mo-pixel*1px;
+		font-size: $mo-pixel*100/360*1vw;
+	}
+}
+@mixin mo-img-size($width, $height) {
+	@include breakpoint(mobile) {
+		img {
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+		&::after {
+			content: "";
+			display: block;
+			width: 100%;
+			padding-top: (( $height*100 ) / $width ) + 0%;
 		}
 	}
 }

@@ -1,3 +1,36 @@
+// src/js/common.js
+window.component = window.component || {};
+window.component.common = /* @__PURE__ */ (function() {
+  let els = {};
+  const init = function() {
+    els.section = document.querySelector(".contents");
+    if (!!els.section) {
+      setElemets();
+      BindEvents();
+    }
+  };
+  const setElemets = function() {
+    els.cursor = els.section.querySelector(".common-cursor");
+  };
+  const BindEvents = function() {
+    eventHandler.mouseMove();
+  };
+  const eventHandler = {
+    mouseMove: function() {
+      document.addEventListener("mousemove", function(event) {
+        console.log(event.clientX, event.clientY);
+        let x = event.clientX;
+        let y = event.clientY;
+        els.cursor.style.cssText = "left:" + x + "px;top:" + y + "px;";
+      });
+    }
+  };
+  const eventsList = {};
+  return {
+    init
+  };
+})();
+
 // src/js/kv.js
 window.component = window.component || {};
 window.component.kv = /* @__PURE__ */ (function() {
@@ -21,16 +54,9 @@ window.component.kv = /* @__PURE__ */ (function() {
   };
   const bindEvents = function() {
     eventsList.setFixedScroll();
-    eventHandler.scroll();
     eventHandler.wheel();
   };
   const eventHandler = {
-    scroll: function() {
-      window.addEventListener("scroll", function() {
-        const p = eventsList.getScrollValue();
-        console.log(p * 100);
-      });
-    },
     wheel: function() {
       window.addEventListener("wheel", (event) => {
         const p = eventsList.getScrollValue();
@@ -90,11 +116,9 @@ window.component.carousel = /* @__PURE__ */ (function() {
   };
   const BindEvents = function() {
   };
-  const eventHandler = function() {
-  };
+  const eventHandler = {};
   const eventsList = {};
-  const accessibility = function() {
-  };
+  const accessibility = {};
   return {
     init
   };
@@ -105,6 +129,7 @@ window.component = window.component || {};
 window.component.initialize = /* @__PURE__ */ (function() {
   const init = function() {
     window.component.kv.init();
+    window.component.common.init();
     window.component.carousel.init();
   };
   return {

@@ -25,17 +25,10 @@ window.component.kv = (function () {
 
 	const bindEvents = function () {
 		eventsList.setFixedScroll();
-		eventHandler.scroll();
 		eventHandler.wheel();
 	};
 
 	const eventHandler = {
-		scroll: function () {
-			window.addEventListener('scroll', function () {
-				const p = eventsList.getScrollValue();
-				console.log(p*100)
-			});
-		},
 		wheel: function() {
 			window.addEventListener('wheel',(event) => {
 				const p = eventsList.getScrollValue();
