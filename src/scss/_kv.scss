@@ -3,7 +3,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: anchor-center;
-		background-color: #bdd5dd;
+		background-color: #d1d6d8;
 	}
 	&__headline {
 		height: 252px;
@@ -35,15 +35,12 @@
 			position: relative;
 			display: inline-block;
 			font-size: 280px;
-			line-height: .9;
+			line-height: 1;
 			font-family: "Fjalla One", sans-serif;
-			letter-spacing: -.05em;
+			letter-spacing: -.03em;
 			transition-duration: .2s;
 			@media screen and (min-width: 1920px) {
 				font-size: 350px;
-			}
-			&.is-active {
-				transform: scaleY(1);
 			}
 		}
 	}

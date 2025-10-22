@@ -24,7 +24,7 @@
   display: flex;
   justify-content: center;
   align-items: anchor-center;
-  background-color: #bdd5dd;
+  background-color: #d1d6d8;
 }
 .component-kv__headline {
   height: 252px;
@@ -54,16 +54,13 @@
   position: relative;
   display: inline-block;
   font-size: 280px;
-  line-height: 0.9;
+  line-height: 1;
   font-family: "Fjalla One", sans-serif;
-  letter-spacing: -0.05em;
+  letter-spacing: -0.03em;
   transition-duration: 0.2s;
 }
 @media screen and (min-width: 1920px) {
   .component-kv__headline-text {
     font-size: 350px;
   }
-}
-.component-kv__headline-text.is-active {
-  transform: scaleY(1);
 }

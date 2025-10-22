@@ -3,6 +3,8 @@ window.component.kv = (function () {
 	let els = {};
 	let gap = 0.1;
 
+	const clamp01 = v => Math.max(0, Math.min(1, v));
+
 	const init = function () {
 		els.section = document.querySelector('.component-kv');
 
@@ -17,6 +19,8 @@ window.component.kv = (function () {
 		els.fixedInner = els.section.querySelector('.common-fixed-inner');
 		els.headlineTop = els.section.querySelector('.js-headline-top');
 		els.headlineBottom = els.section.querySelector('.js-headline-bottom');
+		els.alphabetTop = els.headlineTop.querySelectorAll('span');
+		els.alphabetBottom = els.headlineBottom.querySelectorAll('span');
 	};
 
 	const bindEvents = function () {
@@ -28,24 +32,26 @@ window.component.kv = (function () {
 	const eventHandler = {
 		scroll: function () {
 			window.addEventListener('scroll', function () {
-				const p = eventsList.getScroll();
-				// console.log(p)
+				const p = eventsList.getScrollValue();
+				console.log(p*100)
 			});
 		},
 		wheel: function() {
 			window.addEventListener('wheel',(event) => {
-				const p = eventsList.getScroll();
+				const p = eventsList.getScrollValue();
 				const inRange = p > 0 && p < 1;
 				const wheel = event.wheelDeltaY;
 
 				if (inRange) {
 					if(wheel > 0) {
 						// console.log('Up!');
-						eventsList.headlineBottomAnimation();
+						eventsList.applyHeadlineScale(els.alphabetTop,    p, -1, true,  pLocal => 1 - pLocal);
+						eventsList.applyHeadlineScale(els.alphabetBottom, p, -1, true,  pLocal => pLocal);
 						
 					} else {
 						// console.log('Down!');
-						eventsList.headlineTopAnimation();
+						eventsList.applyHeadlineScale(els.alphabetTop,    p, +1, false, pLocal => 1 - pLocal);
+						eventsList.applyHeadlineScale(els.alphabetBottom, p, +1, false, pLocal => pLocal);
 					}
 				} return; 
 			});
@@ -56,60 +62,21 @@ window.component.kv = (function () {
 		setFixedScroll: function () {
 			els.fixedTrack.style.height = (window.innerHeight * 5) + 'px';
 		},
-		getScroll: function () {
+		getScrollValue: function () {
 			const elsRect = els.fixedTrack.getBoundingClientRect();
 			const viewPort = (window.visualViewport?.height) || window.innerHeight;
 			const t =  elsRect.top / (viewPort - elsRect.height);
 
 			return Math.max(0, Math.min(1, t));
 		},
-		getScaleValue: function (repeat = 1, eps = 1e-3) {
-			const scroll = eventsList.getScroll();
-			const x = (scroll * repeat) % 1;
-			let v = (1 - Math.cos(2 * Math.PI * x)) / 2; // 0→1→0 (사인파)
-
-			if (v > 1 - eps) v = 1;
-			else if (v < eps) v = 0;
-
-			return v;
-		},
-		headlineTopAnimation: function() {
-			const alphabetTop = els.headlineTop.querySelectorAll('span');
-			const alphabetBottom = els.headlineBottom.querySelectorAll('span');
-			const scaleValue = eventsList.getScaleValue();
-
-			for (let i = 0; i < alphabetTop.length; i++) {
-				let scale = 1 - (scaleValue + gap * i);
-				if (scale < 0) scale = 0;
-				if (scale > 1) scale = 1;
-				alphabetTop[i].style.transform = `scaleY(${scale})`;
-			}
-
-			for (let i = 0; i < alphabetBottom.length; i++) {
-				let scale = scaleValue + gap * i;
-				if (scale < 0) scale = 0;
-				if (scale > 1) scale = 1;
-				alphabetBottom[i].style.transform = `scaleY(${scale})`;
-			}
-		},
-		headlineBottomAnimation: function() {
-			const alphabetTop = els.headlineTop.querySelectorAll('span');
-			const alphabetBottom = els.headlineBottom.querySelectorAll('span');
-			const scaleValue = eventsList.getScaleValue();
-
-			for (let i = 0; i < alphabetTop.length; i++) {
-				let scale = scaleValue + gap * i;
-				if (scale < 0) scale = 0;
-				if (scale > 1) scale = 1;
-				alphabetTop[i].style.transform = `scaleY(${scale})`;
-			}
-
-			for (let i = 0; i < alphabetBottom.length; i++) {
-				let scale = 1 - (scaleValue + gap * i);
-				if (scale < 0) scale = 0;
-				if (scale > 1) scale = 1;
-				alphabetBottom[i].style.transform = `scaleY(${scale})`;
-			}
+		applyHeadlineScale: function(spans, p, dir, scrollUp, computeScale) {
+			const len = spans.length;
+			for (let k = 0; k < len; k++) {
+				const i = scrollUp ? (len - 1 - k) : k;
+				const pLocal = p + dir * gap * (k + 1);
+				let scale = clamp01(computeScale(pLocal));
+				spans[i].style.transform = `scaleY(${scale})`;
+			};
 		}
 	};
 
