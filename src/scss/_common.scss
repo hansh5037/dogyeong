@@ -73,16 +73,68 @@ table {
 			position:fixed;
 			left:0;
 			top:0;
+			width: 180px;
+			height: 180px;
 			pointer-events:none;/*요소가 포인터 이벤트의 대상이 되지 않는다.*/
-			width:150px;
-			height:150px;
+			transform: translate(-50%,-50%);
+			mix-blend-mode: exclusion;
+			z-index: 1;
+		}
+		&-circle {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			width: 130px;
+			height: 130px;
 			background-color: #E07D9B;
 			opacity: .8;
 			border:1px solid #E07D9B;
 			border-radius:50%;
-			transform: translate(-50%,-50%);
-			z-index: 1;
-			mix-blend-mode: exclusion
+		}
+		&-svg {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 180px;
+			height: 180px;
+			fill: #cfcfcf;
+		}
+		&-text {
+			font-family: "Noto Sans", sans-serif;
+			font-size: 12px;
+    		letter-spacing: 1.4px;
+			transform-origin: center;
+			animation: rotate-text 10s linear infinite;
+		}
+	}
+	&-description {
+		font-family: "Noto Sans", sans-serif;
+		font-size: 18px;
+	}
+}
+@keyframes rotate-text{
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+	.common {
+		&-description {
+			font-size: 16px;
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.common {
+		&-description {
+			font-size: 16px;
+			@media screen and (max-width: 534px) {
+				font-size: 12px;
+			}
 		}
 	}
 }

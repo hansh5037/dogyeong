@@ -138,8 +138,9 @@ window.component.carousel = /* @__PURE__ */ (function() {
 window.component = window.component || {};
 window.component.initialize = /* @__PURE__ */ (function() {
   const init = function() {
-    window.component.kv.init();
     window.component.common.init();
+    window.component.gnb.init();
+    window.component.kv.init();
     window.component.carousel.init();
   };
   return {

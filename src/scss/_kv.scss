@@ -11,17 +11,24 @@
 		grid-row: 1;
 	}
 	&__headline {
+		position: relative;
 		display: grid;
-		border-bottom: 1px solid #222;
-		@media screen and (min-width: 1920px) {
-			height: 360px;
+		&::after {
+			content: '';
+			position: absolute;
+			top: 100%;
+			left: 50%;
+			width: 100vw;
+			border-bottom: 1px solid #222;
+			transform: translateX(-50%);
 		}
 		&-position {
 			display: flex;
     		justify-content: center;
-			width: 100%;
 			grid-column: 1;
 			grid-row: 2;
+			width: 100%;
+			padding: 10px 0;
 			&--bottom {
 				.component-kv__headline-text {
 					transform: scaleY(0);
@@ -53,7 +60,6 @@
 @media screen and (min-width: 769px) and (max-width: 1024px) {
 	.component-kv {
 		&__headline {
-			height: 200px;
 			&-text {
 				font-size: 180px;
 			}
@@ -64,8 +70,6 @@
 @media screen and (max-width: 768px) {
 	.component-kv {
 		&__headline {
-			height: 25vw;
-			// @include vw-convert-mo(height, 91);
 			&-text {
 				font-size: 22vw;
 			}
