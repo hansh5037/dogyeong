@@ -20,7 +20,6 @@ window.component.common = (function () {
 	const eventHandler = {
         mouseMove: function () {
             document.addEventListener("mousemove", function (event) {
-                console.log(event.clientX, event.clientY)
                 let x = event.clientX;
                 let y = event.clientY;
 
