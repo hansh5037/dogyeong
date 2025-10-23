@@ -6,21 +6,22 @@
 		background-color: #c4c6c7;
 		background-image: url(/images/noise.svg);
 	}
+	&__eyebrow {
+		grid-column: 1;
+		grid-row: 1;
+	}
 	&__headline {
-		height: 300px;
-		width: 100%;
-		border-bottom: 1px solid;
+		display: grid;
+		border-bottom: 1px solid #222;
 		@media screen and (min-width: 1920px) {
 			height: 360px;
 		}
 		&-position {
-			position: absolute;
 			display: flex;
     		justify-content: center;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
 			width: 100%;
+			grid-column: 1;
+			grid-row: 2;
 			&--bottom {
 				.component-kv__headline-text {
 					transform: scaleY(0);
@@ -39,6 +40,7 @@
 			font-size: 280px;
 			line-height: 1;
 			font-family: "Fjalla One", sans-serif;
+			color: #222;
 			letter-spacing: -.03em;
 			transition-duration: .2s;
 			@media screen and (min-width: 1920px) {

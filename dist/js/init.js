@@ -18,7 +18,6 @@ window.component.common = /* @__PURE__ */ (function() {
   const eventHandler = {
     mouseMove: function() {
       document.addEventListener("mousemove", function(event) {
-        console.log(event.clientX, event.clientY);
         let x = event.clientX;
         let y = event.clientY;
         els.cursor.style.cssText = "left:" + x + "px;top:" + y + "px;";
@@ -51,10 +50,12 @@ window.component.kv = /* @__PURE__ */ (function() {
     els.headlineBottom = els.section.querySelector(".js-headline-bottom");
     els.alphabetTop = els.headlineTop.querySelectorAll("span");
     els.alphabetBottom = els.headlineBottom.querySelectorAll("span");
+    els.eyebrow = els.section.querySelector(".js-eyebrow");
   };
   const bindEvents = function() {
     eventsList.setFixedScroll();
     eventHandler.wheel();
+    eventsList.eyebrowChange();
   };
   const eventHandler = {
     wheel: function() {
@@ -94,6 +95,15 @@ window.component.kv = /* @__PURE__ */ (function() {
         spans[i].style.transform = `scaleY(${scale})`;
       }
       ;
+    },
+    eyebrowChange: function() {
+      const eyebrowChangeValue = ["UI/UX", "FrontEnd", "Web"];
+      let i = 0;
+      els.eyebrow.innerText = eyebrowChangeValue[i];
+      setInterval(function() {
+        i = (i + 1) % eyebrowChangeValue.length;
+        els.eyebrow.innerHTML = eyebrowChangeValue[i];
+      }, 1500);
     }
   };
   return {
