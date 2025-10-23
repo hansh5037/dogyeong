@@ -1,0 +1,40 @@
+.gnb {
+	position: sticky;
+	display: flex;
+	align-items: flex-end;
+	top: 0;
+	width: 100%;
+	height: var(--gnb-height);
+	padding: 0 20px;
+	z-index: 10;
+	backdrop-filter: blur(3px);
+	border-bottom: 1px solid var(--black);
+	&__button {
+		min-width: 120px;
+		margin: 0 5px;
+		padding: 18px;
+		border-radius: 10px 10px 0 0;
+		border: 0;
+		background-color: #ad6f81;
+		transition: padding .3s;
+		cursor: pointer;
+		&:hover,
+		&:focus {
+			background-color: #698c87;
+		}
+		&.is-active {
+			background-color: #698c87;
+			padding: 25px 18px;
+		}
+	}
+}
+
+@media screen and (min-width: 769px) and (max-width: 1024px) {
+	.gnb {
+	}
+}
+	
+@media screen and (max-width: 768px) {
+	.gnb {
+	}
+}

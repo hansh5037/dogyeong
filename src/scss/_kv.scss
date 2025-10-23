@@ -19,7 +19,7 @@
 			top: 100%;
 			left: 50%;
 			width: 100vw;
-			border-bottom: 1px solid #222;
+			border-bottom: 1px solid var(--black);
 			transform: translateX(-50%);
 		}
 		&-position {
@@ -47,7 +47,7 @@
 			font-size: 280px;
 			line-height: 1;
 			font-family: "Fjalla One", sans-serif;
-			color: #222;
+			color: var(--black);
 			letter-spacing: -.03em;
 			transition-duration: .2s;
 			@media screen and (min-width: 1920px) {

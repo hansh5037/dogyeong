@@ -12,7 +12,11 @@
 </head>
 <body>
 	<div class="contents">
-		
+		<div class="gnb js-gnb">
+    <button class="gnb__button" type="button" data-value="home">HOME</button>
+    <button class="gnb__button" type="button" data-value="carousel">CAROUSEL</button>
+    <button class="gnb__button" type="button" data-value="aa">AA</button>
+</div>
 		<div class="common-cursor">
 	<span class="common-cursor-circle">
 	</span>
@@ -27,7 +31,7 @@
 	</text>
 	</svg>
 </div>
-<section class="component-kv" id="kv">
+<section id="home" class="component-kv" id="kv">
 	<div class="common-fixed-track">
 		<div class="component-kv__wrap common-fixed-inner">
 			<div class="component-kv__headline">
@@ -59,8 +63,8 @@
 		</div>
 	</div>
 </section>
-		<section>
-	<div class="component-carousel">
+		<section id="carousel">
+	<div class="component-carousel" style="height: 5000px;">
 		<div class="component-carousel__container">
 			<div class="component-carousel__wrap">
 				<div class="component-carousel__slide">1</div>

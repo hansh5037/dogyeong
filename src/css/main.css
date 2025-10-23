@@ -1,4 +1,8 @@
-@charset "UTF-8";
+:root {
+  --gnb-height: 80px;
+  --black: #222;
+}
+
 /* reset.css */
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -29,7 +33,6 @@ footer, header, hgroup, menu, nav, section {
 
 body {
   line-height: 1;
-  cursor: pointer;
 }
 
 ol, ul {
@@ -68,8 +71,8 @@ table {
 }
 .common-fixed-inner {
   position: sticky;
-  top: 0;
-  height: 100dvh;
+  top: var(--gnb-height);
+  height: calc(100dvh - var(--gnb-height));
   overflow: hidden;
 }
 @media screen and (min-width: 1024px) {
@@ -79,7 +82,7 @@ table {
     top: 0;
     width: 180px;
     height: 180px;
-    pointer-events: none; /*요소가 포인터 이벤트의 대상이 되지 않는다.*/
+    pointer-events: none;
     transform: translate(-50%, -50%);
     mix-blend-mode: exclusion;
     z-index: 1;
@@ -138,6 +141,36 @@ table {
     font-size: 12px;
   }
 }
+.gnb {
+  position: sticky;
+  display: flex;
+  align-items: flex-end;
+  top: 0;
+  width: 100%;
+  height: var(--gnb-height);
+  padding: 0 20px;
+  z-index: 10;
+  backdrop-filter: blur(3px);
+  border-bottom: 1px solid var(--black);
+}
+.gnb__button {
+  min-width: 120px;
+  margin: 0 5px;
+  padding: 18px;
+  border-radius: 10px 10px 0 0;
+  border: 0;
+  background-color: #ad6f81;
+  transition: padding 0.3s;
+  cursor: pointer;
+}
+.gnb__button:hover, .gnb__button:focus {
+  background-color: #698c87;
+}
+.gnb__button.is-active {
+  background-color: #698c87;
+  padding: 25px 18px;
+}
+
 .component-kv__wrap {
   display: flex;
   justify-content: center;
@@ -159,7 +192,7 @@ table {
   top: 100%;
   left: 50%;
   width: 100vw;
-  border-bottom: 1px solid #222;
+  border-bottom: 1px solid var(--black);
   transform: translateX(-50%);
 }
 .component-kv__headline-position {
@@ -183,7 +216,7 @@ table {
   font-size: 280px;
   line-height: 1;
   font-family: "Fjalla One", sans-serif;
-  color: #222;
+  color: var(--black);
   letter-spacing: -0.03em;
   transition-duration: 0.2s;
 }

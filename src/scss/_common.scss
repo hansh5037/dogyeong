@@ -26,7 +26,6 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
     line-height: 1;
-	cursor:pointer;
 }
 ol, ul {
     list-style: none;
@@ -63,8 +62,8 @@ table {
 		}
 		&-inner {
 			position: sticky;
-			top: 0;
-			height: 100dvh;
+			top: var(--gnb-height);
+			height: calc(100dvh - var(--gnb-height));
 			overflow: hidden;
 		}
 	}
@@ -75,7 +74,7 @@ table {
 			top:0;
 			width: 180px;
 			height: 180px;
-			pointer-events:none;/*요소가 포인터 이벤트의 대상이 되지 않는다.*/
+			pointer-events:none;
 			transform: translate(-50%,-50%);
 			mix-blend-mode: exclusion;
 			z-index: 1;
