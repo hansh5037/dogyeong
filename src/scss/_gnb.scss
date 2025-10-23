@@ -1,40 +1,57 @@
 .gnb {
 	position: sticky;
-	display: flex;
-	align-items: flex-end;
 	top: 0;
-	width: 100%;
 	height: var(--gnb-height);
-	padding: 0 20px;
-	z-index: 10;
+	z-index: 1;
 	backdrop-filter: blur(3px);
 	border-bottom: 1px solid var(--black);
+	&__wrap {
+		display: flex;
+		align-items: center;
+		padding: 0 20px;
+		height: 100%;
+		@media screen and (min-width: 1025px) {
+			max-width: 1920px;
+			margin: auto;
+		}
+	}
 	&__button {
-		min-width: 120px;
+		min-width: 100px;
 		margin: 0 5px;
-		padding: 18px;
-		border-radius: 10px 10px 0 0;
+		padding: 15px;
+		border-radius: 10px;
 		border: 0;
 		background-color: #ad6f81;
 		transition: padding .3s;
 		cursor: pointer;
-		&:hover,
-		&:focus {
-			background-color: #698c87;
-		}
 		&.is-active {
-			background-color: #698c87;
-			padding: 25px 18px;
+			filter: invert(1);
 		}
 	}
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
 	.gnb {
+		height: var(--gnb-height-tb);
+		&__button {
+			min-width: 90px;
+			padding: 10px;
+			border-radius: 5px;
+			font-size: 12px;
+		}
 	}
 }
 	
 @media screen and (max-width: 768px) {
 	.gnb {
+		height: var(--gnb-height-mo);
+		&__button {
+			min-width: auto;
+			padding: 10px;
+			font-size: 12px;
+			background: transparent;
+			color: #ad6f81;
+			font-weight: 700;
+		}
 	}
 }

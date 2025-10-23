@@ -13,20 +13,21 @@
 <body>
 	<div class="contents">
 		<div class="gnb js-gnb">
-    <button class="gnb__button" type="button" data-value="home">HOME</button>
-    <button class="gnb__button" type="button" data-value="carousel">CAROUSEL</button>
-    <button class="gnb__button" type="button" data-value="aa">AA</button>
+    <div class="gnb__wrap">
+        <button class="gnb__button" type="button" data-value="home">HOME</button>
+        <button class="gnb__button" type="button" data-value="carousel">CAROUSEL</button>
+        <button class="gnb__button" type="button" data-value="aa">AA</button>
+    </div>
 </div>
 		<div class="common-cursor">
-	<span class="common-cursor-circle">
-	</span>
+	<span class="common-cursor-circle"></span>
 	<svg class="common-cursor-svg" width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" aria-label="CIRCULAR TEXT">
 	<defs>
 		<path id="ring" d="M90,15 a75,75 0 1,1 0,150 a75,75 0 1,1 0,-150"/>
 	</defs>
 	<text class="common-cursor-text">
 		<textPath href="#ring">
-		HAKUNA MATATA. IT MEANS NO WORRIES FOR THE REST OF YOUR DAYS.
+			HAKUNA MATATA. IT MEANS NO WORRIES FOR THE REST OF YOUR DAYS.
 		</textPath>
 	</text>
 	</svg>
@@ -36,7 +37,14 @@
 		<div class="component-kv__wrap common-fixed-inner">
 			<div class="component-kv__headline">
 				<div class="component-kv__eyebrow common-description">
-					<span class="component-kv__eyebrow-change js-eyebrow"></span> Developer
+					<div class="component-kv__eyebrow-job">
+						<span class="component-kv__eyebrow-change js-eyebrow"></span> Developer
+					</div>
+					<ul role="list" class="component-kv__eyebrow-skills">
+						<li role="listitem" class="component-kv__eyebrow-skills-item common-description">HTML /</li>
+						<li role="listitem" class="component-kv__eyebrow-skills-item common-description">SCSS·CSS /</li>
+						<li role="listitem" class="component-kv__eyebrow-skills-item common-description">Java Script</li>
+					</ul role="list">
 				</div>
 				<h1 class="blind">dogyeong</h1>
 				<div class="component-kv__headline-position component-kv__headline-position--top js-headline-top">

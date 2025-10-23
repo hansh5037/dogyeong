@@ -7,8 +7,16 @@
 		background-image: url(../images/noise.svg);
 	}
 	&__eyebrow {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
 		grid-column: 1;
 		grid-row: 1;
+		&-skills-item {
+			display: inline-block;
+			text-align: right;
+			line-height: 1.3;
+		}
 	}
 	&__headline {
 		position: relative;
