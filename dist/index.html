@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width,initial-scale=1.0" />
-	<title>Document</title>
+	<title>Dogyeong's Portfolio</title>
 	<link rel="stylesheet" href="./css/main.css" />
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,16 +12,22 @@
 </head>
 <body>
 	<div class="contents">
-		<div class="gnb js-gnb">
-    <div class="gnb__wrap">
-        <button class="gnb__button" type="button" data-value="home">HOME</button>
-        <button class="gnb__button" type="button" data-value="carousel">CAROUSEL</button>
-        <button class="gnb__button" type="button" data-value="aa">AA</button>
-    </div>
-</div>
+		<nav aria-label="주요 메뉴" class="gnb js-gnb">
+	<ul role="list" class="gnb__wrap">
+		<li>
+			<button class="gnb__button" type="button" data-value="home">HOME</button>
+		</li>
+		<li>
+			<button class="gnb__button" type="button" data-value="carousel">CAROUSEL</button>
+		</li>
+		<li>
+			<button class="gnb__button" type="button" data-value="aa">AA</button>
+		</li>
+	</ul>
+</nav>
 		<div class="common-cursor">
 	<span class="common-cursor-circle"></span>
-	<svg class="common-cursor-svg" width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" aria-label="CIRCULAR TEXT">
+	<svg class="common-cursor-svg" width="180" height="180" viewBox="0 0 180 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 	<defs>
 		<path id="ring" d="M90,15 a75,75 0 1,1 0,150 a75,75 0 1,1 0,-150"/>
 	</defs>
@@ -32,19 +38,19 @@
 	</text>
 	</svg>
 </div>
-<section id="home" class="component-kv" id="kv">
+<section id="home" class="component-kv">
 	<div class="common-fixed-track">
 		<div class="component-kv__wrap common-fixed-inner">
 			<div class="component-kv__headline">
 				<div class="component-kv__eyebrow common-description">
 					<div class="component-kv__eyebrow-job">
-						<span class="component-kv__eyebrow-change js-eyebrow"></span> Developer
+						<span class="component-kv__eyebrow-change js-eyebrow" aria-live="polite"></span> Developer
 					</div>
 					<ul role="list" class="component-kv__eyebrow-skills">
 						<li role="listitem" class="component-kv__eyebrow-skills-item common-description">HTML /</li>
 						<li role="listitem" class="component-kv__eyebrow-skills-item common-description">SCSS·CSS /</li>
 						<li role="listitem" class="component-kv__eyebrow-skills-item common-description">Java Script</li>
-					</ul role="list">
+					</ul>
 				</div>
 				<h1 class="blind">dogyeong</h1>
 				<div class="component-kv__headline-position component-kv__headline-position--top js-headline-top">
