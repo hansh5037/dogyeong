@@ -15,7 +15,7 @@ window.component.common = (function () {
 		els.cursor = els.section.querySelector('.common-cursor')
 	};
 	const BindEvents = function () {
-		if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+		if (!window.navigator.maxTouchPoints == 0) return;
 		eventHandler.mouseMove();
 	};
 	const eventHandler = {

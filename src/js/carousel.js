@@ -3,7 +3,7 @@ window.component.carousel = (function () {
 	let els = {};
 
 	const init = function () {
-		els.section = document.querySelector('component-carousel');
+		els.section = document.querySelector('.component-carousel');
 
 		if (!!els.section) {
 			setElemets();

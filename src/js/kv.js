@@ -37,10 +37,10 @@ window.component.kv = (function () {
 			window.addEventListener('wheel',(event) => {
 				const p = eventsList.getScrollValue();
 				const inRange = p > 0 && p < 1;
-				const wheel = event.wheelDeltaY;
+				const wheel = event.deltaY;
 
 				if (inRange) {
-					if(wheel > 0) {
+					if(wheel < 0) {
 						// scroll Up
 						eventsList.applyHeadlineScale(els.alphabetTop,    p, -1, true,  pLocal => 1 - pLocal);
 						eventsList.applyHeadlineScale(els.alphabetBottom, p, -1, true,  pLocal => pLocal);
@@ -61,7 +61,7 @@ window.component.kv = (function () {
 		},
 		getScrollValue: function () {
 			const elsRect = els.fixedTrack.getBoundingClientRect();
-			const viewPort = (window.visualViewport?.height) || window.innerHeight;
+			const viewPort = window.innerHeight;
 			const t =  elsRect.top / (viewPort - elsRect.height);
 
 			return Math.max(0, Math.min(1, t));
