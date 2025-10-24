@@ -6,12 +6,12 @@ window.component.carousel = (function () {
 		els.section = document.querySelector('.component-carousel');
 
 		if (!!els.section) {
-			setElemets();
+			setElements();
 			BindEvents();
 		}
 	};
 
-	const setElemets = function () {};
+	const setElements = function () {};
 	const BindEvents = function () {};
 	const eventHandler = {};
 	const eventsList = {};

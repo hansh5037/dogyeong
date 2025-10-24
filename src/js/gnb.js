@@ -4,11 +4,11 @@ window.component.gnb = (function () {
 
 	const init = function () {
 
-		setElemets();
+		setElements();
 		BindEvents();
 	};
 
-	const setElemets = function () {
+	const setElements = function () {
 		els.gnb = document.querySelector('.gnb');
 		els.gnbButton = els.gnb.querySelectorAll('button');
 		els.home = document.querySelector('#home');
