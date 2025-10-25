@@ -38,8 +38,11 @@ window.component.kv = (function () {
             window.addEventListener('scroll', function () {
                 const p = fixed.getProgress();
                 const dir = fixed.getDirection();
-				eventsList.top(p, dir);
-				eventsList.bottom(p, dir);
+				if (p.trackInside) {
+					console.log(p)
+					eventsList.top(p, dir);
+					eventsList.bottom(p, dir);
+				}
             });
         }
     };
@@ -59,9 +62,9 @@ window.component.kv = (function () {
 			
             for (let i = 0; i < span.length; i++) {
                 const scale = clamp01(prog);
-                span[i].style.transform = `scaleY(${scale})`;
 				if (dir === 'up') prog += gap;
 				if (dir === 'down') prog -= gap;
+                span[i].style.transform = `scaleY(${scale})`;
             }
         },
         bottom: function (p, dir) {
@@ -72,9 +75,9 @@ window.component.kv = (function () {
 
             for (let i = span.length - 1; i >= 0; i--) {
                 const scale = clamp01(prog);
-                span[i].style.transform = `scaleY(${scale})`;
 				if (dir === 'up') prog -= gap;
 				if (dir === 'down') prog += gap;
+                span[i].style.transform = `scaleY(${scale})`;
             }
         },
         eyebrowChange: function () {

@@ -11,8 +11,9 @@ window.component.common = /* @__PURE__ */ (function() {
   };
   const setElements = function() {
     els.cursor = els.section.querySelector(".common-cursor");
+    els.gnb = els.section.querySelector(".gnb");
     els.fixedTrack = els.section.querySelector(".common-fixed-track");
-    els.fixedInner = els.section.querySelector(".common-fixed-inner");
+    els.fixedInner = els.fixedTrack.querySelector(".common-fixed-inner");
   };
   const BindEvents = function() {
     eventHandler.mouseMove();
@@ -44,21 +45,28 @@ window.component.common = /* @__PURE__ */ (function() {
     },
     getProgress: function() {
       if (!els.fixedTrack) return;
-      const elsRect = els.fixedTrack.getBoundingClientRect();
-      const viewPort = window.visualViewport && window.visualViewport.height || window.innerHeight;
-      const trackOutside = elsRect.bottom <= viewPort || elsRect.top >= viewPort;
+      const viewPort = window.innerHeight;
+      const viewPortTop = window.scrollY + els.gnb.offsetHeight;
+      const viewPortBottom = window.scrollY + viewPort;
+      const elsTop = els.fixedTrack.offsetTop;
+      const elsBottom = els.fixedTrack.offsetTop + els.fixedTrack.offsetHeight;
+      const start = viewPortTop < elsTop;
+      const end = viewPortBottom > elsBottom;
+      const trackInside = !start && !end;
       let progress;
-      if (!trackOutside) {
-        const t = (viewPort - elsRect.top) / elsRect.height;
+      if (trackInside) {
+        const usableVh = viewPort - (els.gnb && els.gnb.offsetHeight || 0);
+        const trackH = elsBottom - elsTop;
+        const denom = Math.max(1, trackH - usableVh);
+        const t = (viewPortTop - elsTop) / denom;
         progress = Math.max(0, Math.min(1, t));
-        if (progress < 0.19) progress = 0;
-        if (progress > 1 - 0.02) progress = 1;
+        if (end) progress = 1;
       }
-      return { elsRect, viewPort, trackOutside, progress };
+      return { viewPort, trackInside, progress };
     },
     getDirection: function() {
       const s = this.getProgress();
-      if (s.trackOutside) return;
+      if (!s.trackInside) return;
       if (this.lastP == null) {
         this.lastP = s.progress;
         return;
@@ -153,8 +161,11 @@ window.component.kv = (function() {
       window.addEventListener("scroll", function() {
         const p = fixed.getProgress();
         const dir = fixed.getDirection();
-        eventsList.top(p, dir);
-        eventsList.bottom(p, dir);
+        if (p.trackInside) {
+          console.log(p);
+          eventsList.top(p, dir);
+          eventsList.bottom(p, dir);
+        }
       });
     }
   };
@@ -170,9 +181,9 @@ window.component.kv = (function() {
       const span = dir === "up" ? spanArray.reverse() : spanArray;
       for (let i = 0; i < span.length; i++) {
         const scale = clamp01(prog);
-        span[i].style.transform = `scaleY(${scale})`;
         if (dir === "up") prog += gap;
         if (dir === "down") prog -= gap;
+        span[i].style.transform = `scaleY(${scale})`;
       }
     },
     bottom: function(p, dir) {
@@ -181,9 +192,9 @@ window.component.kv = (function() {
       const span = dir === "up" ? spanArray : spanArray.reverse();
       for (let i = span.length - 1; i >= 0; i--) {
         const scale = clamp01(prog);
-        span[i].style.transform = `scaleY(${scale})`;
         if (dir === "up") prog -= gap;
         if (dir === "down") prog += gap;
+        span[i].style.transform = `scaleY(${scale})`;
       }
     },
     eyebrowChange: function() {
