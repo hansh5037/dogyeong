@@ -16,9 +16,6 @@ window.component.kv = (function () {
     };
 
     const setElements = function () {
-        els.fixedTrack = els.section.querySelector('.common-fixed-track');
-        els.fixedInner = els.section.querySelector('.common-fixed-inner');
-
         els.headlineTop = els.section.querySelector('.js-headline-top');
         els.headlineBottom = els.section.querySelector('.js-headline-bottom');
         els.alphabetTop = els.headlineTop.querySelectorAll('span');
@@ -28,7 +25,6 @@ window.component.kv = (function () {
     };
 
     const bindEvents = function () {
-        eventsList.setFixed();
         eventHandler.scroll();
         eventsList.eyebrowChange();
     };
@@ -39,7 +35,6 @@ window.component.kv = (function () {
                 const p = fixed.getProgress();
                 const dir = fixed.getDirection();
 				if (p.trackInside) {
-					console.log(p)
 					eventsList.top(p, dir);
 					eventsList.bottom(p, dir);
 				}
@@ -48,12 +43,6 @@ window.component.kv = (function () {
     };
 
     const eventsList = {
-        setFixed: function () {
-            fixed.set({
-                trackHeight: 5
-            })
-
-        },
         top: function (p, dir) {
 			let prog = 1 - p.progress;
 
