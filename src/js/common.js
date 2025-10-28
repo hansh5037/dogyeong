@@ -19,7 +19,10 @@ window.component.common = (function () {
 	};
 	const BindEvents = function () {
 		eventHandler.mouseMove();
-		fixedScrollEvent.setTrack();
+
+		if (!! els.fixedTrack) {
+			fixedScrollEvent.setTrack();
+		}
 	};
 	const eventHandler = {
 		mouseMove: function () {
@@ -45,7 +48,6 @@ window.component.common = (function () {
 			for (let i = 0; i < els.fixedTrack.length; i++) {
 				const trackHeight = Number(els.fixedTrack[i].getAttribute('data-track-height')) || 1;;
 				els.fixedTrack[i].style.height = (window.innerHeight * trackHeight) + 'px';
-				console.log(trackHeight)
 			}
 		},
 		getProgress: function () {
