@@ -1,10 +1,12 @@
 .component-kv {
 	&__wrap {
 		display: flex;
-		justify-content: center;
-		align-items: center;
+		flex-direction: column;
+		justify-content: space-between;
+		align-items: flex-start;
 		background-color: #c4c6c7;
 		background-image: url(../images/noise.svg);
+		overflow: visible;
 	}
 	&__eyebrow {
 		display: flex;
@@ -21,6 +23,9 @@
 	&__headline {
 		position: relative;
 		display: grid;
+		margin-top: 50px;
+		margin-right: auto;
+		margin-left: auto;
 		&::after {
 			content: '';
 			position: absolute;
@@ -63,24 +68,84 @@
 			}
 		}
 	}
+	&__bg {
+		&::after, 
+		&::before {
+			content: "";
+			display: block;
+			position: absolute;
+			bottom: 0;
+			width: 1000px;
+			@media screen and (min-width: 1920px) {
+				width: 1110px;
+			}	
+			background-repeat: no-repeat;
+			background-size: 100%;
+		}
+		&::after {
+			right: 0;
+			background-image: url(../images/tree-right.png);
+			aspect-ratio: 731 / 195;
+		}
+		&::before {
+			left: 0;
+			background-image: url(../images/tree-left.png);
+			aspect-ratio: 933 / 380;
+			z-index: 1;
+		}
+		img {
+			position: absolute;
+			left: 50%;
+			bottom: 0;
+			transform: translateX(-50%);
+			// mix-blend-mode: darken;
+			width: 1280px;
+			@media screen and (min-width: 1920px) {
+				width: 1320px;
+			}			
+		}
+	}
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
 	.component-kv {
 		&__headline {
+			margin-top: 40px;
 			&-text {
 				font-size: 180px;
 			}
 		}
+		&__bg {
+			&::after, 
+			&::before {
+				width: 600px;
+			}
+			img {
+				width: 800px;		
+			}
+		}		
 	}
 }
 	
 @media screen and (max-width: 768px) {
 	.component-kv {
 		&__headline {
+			margin-top: 30px;
 			&-text {
 				font-size: 22vw;
 			}
 		}
+		&__bg {
+			&::after, 
+			&::before {
+				width: 300px;
+				@media screen and (max-width: 534px) {
+					width: 260px;
+				}
+			}
+			img {
+				width: 100%;		
+			}
+		}			
 	}
 }
