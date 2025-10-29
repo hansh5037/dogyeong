@@ -5,7 +5,7 @@ window.component.gnb = (function () {
 	const init = function () {
 
 		setElements();
-		BindEvents();
+		bindEvents();
 	};
 
 	const setElements = function () {
@@ -14,7 +14,7 @@ window.component.gnb = (function () {
 		els.home = document.querySelector('#home');
 		els.carousel = document.querySelector('#carousel');
 	};
-	const BindEvents = function () {
+	const bindEvents = function () {
 		eventHandler.scroll();
 	};
 	const eventHandler = {

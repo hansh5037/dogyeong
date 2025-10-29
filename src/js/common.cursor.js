@@ -6,11 +6,11 @@ window.component.commonCursor = (function () {
 		els.section = document.querySelector('.cursor');
 
 		if (!!els.section) {
-			BindEvents();
+			bindEvents();
 		}
 	};
 
-	const BindEvents = function (event) {
+	const bindEvents = function (event) {
 		eventHandler.mouseMove();
 	};
 

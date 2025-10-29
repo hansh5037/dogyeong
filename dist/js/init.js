@@ -1,25 +1,59 @@
+// src/js/common.resize.js
+window.component = window.component || {};
+window.component.commonResize = /* @__PURE__ */ (function() {
+  let els = {};
+  const init = function() {
+    els.section = document.querySelector(".contents");
+  };
+  const resizeHandler = function(onRealResize) {
+    let lastW = window.innerWidth;
+    let lastH = window.visualViewport?.height ?? window.innerHeight;
+    window.addEventListener("resize", function() {
+      let w = window.innerWidth;
+      let h = window.visualViewport?.height ?? window.innerHeight;
+      const widthChanged = w !== lastW;
+      const deltaH = Math.abs(h - lastH);
+      const relative = deltaH / Math.max(1, lastH);
+      if (!widthChanged && relative < 0.06) {
+        lastH = h;
+        return;
+      }
+      lastW = w;
+      lastH = h;
+      onRealResize && onRealResize(w, h);
+    });
+  };
+  return {
+    init,
+    resizeHandler
+  };
+})();
+
 // src/js/common.fixed.js
 window.component = window.component || {};
-window.component.commonFixed = /* @__PURE__ */ (function() {
+window.component.commonFixed = (function() {
   let els = {};
+  let resize = window.component.commonResize.resizeHandler;
   const init = function() {
     els.section = document.querySelector(".contents");
     els.fixedTrack = els.section.querySelectorAll(".common-fixed-track");
     if (!!els.fixedTrack) {
       setElements();
-      BindEvents();
+      bindEvents();
     }
   };
   const setElements = function() {
     els.gnb = els.section.querySelector(".gnb");
   };
-  const BindEvents = function() {
+  const bindEvents = function() {
     eventslist.setTrack();
     eventHandler.resize();
   };
   const eventHandler = {
     resize: function() {
-      window.addEventListener("resize", eventslist.setTrack);
+      resize(function() {
+        eventslist.setTrack();
+      });
     }
   };
   const eventslist = {
@@ -88,10 +122,10 @@ window.component.commonCursor = /* @__PURE__ */ (function() {
   const init = function() {
     els.section = document.querySelector(".cursor");
     if (!!els.section) {
-      BindEvents();
+      bindEvents();
     }
   };
-  const BindEvents = function(event) {
+  const bindEvents = function(event) {
     eventHandler.mouseMove();
   };
   const eventHandler = {
@@ -122,7 +156,7 @@ window.component.gnb = /* @__PURE__ */ (function() {
   let els = {};
   const init = function() {
     setElements();
-    BindEvents();
+    bindEvents();
   };
   const setElements = function() {
     els.gnb = document.querySelector(".gnb");
@@ -130,7 +164,7 @@ window.component.gnb = /* @__PURE__ */ (function() {
     els.home = document.querySelector("#home");
     els.carousel = document.querySelector("#carousel");
   };
-  const BindEvents = function() {
+  const bindEvents = function() {
     eventHandler.scroll();
   };
   const eventHandler = {
@@ -247,12 +281,12 @@ window.component.carousel = /* @__PURE__ */ (function() {
     els.section = document.querySelector(".component-carousel");
     if (!!els.section) {
       setElements();
-      BindEvents();
+      bindEvents();
     }
   };
   const setElements = function() {
   };
-  const BindEvents = function() {
+  const bindEvents = function() {
   };
   const eventHandler = {};
   const eventsList = {};
@@ -266,6 +300,7 @@ window.component.carousel = /* @__PURE__ */ (function() {
 window.component = window.component || {};
 window.component.initialize = /* @__PURE__ */ (function() {
   const init = function() {
+    window.component.commonResize.init();
     window.component.commonFixed.init();
     window.component.commonCursor.init();
     window.component.gnb.init();

@@ -83,7 +83,7 @@ p, span, ul, li, strong, div, a, button {
 .common-fixed-inner {
   position: sticky;
   top: var(--gnb-height);
-  height: calc(100dvh - var(--gnb-height));
+  height: calc(100svh - var(--gnb-height));
   overflow: hidden;
 }
 .common-description {
@@ -102,7 +102,7 @@ p, span, ul, li, strong, div, a, button {
   }
   .common-fixed-inner {
     top: var(--gnb-height-tb);
-    height: calc(100dvh - var(--gnb-height-tb));
+    height: calc(100svh - var(--gnb-height-tb));
   }
 }
 @media screen and (max-width: 768px) {

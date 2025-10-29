@@ -7,12 +7,12 @@ window.component.carousel = (function () {
 
 		if (!!els.section) {
 			setElements();
-			BindEvents();
+			bindEvents();
 		}
 	};
 
 	const setElements = function () {};
-	const BindEvents = function () {};
+	const bindEvents = function () {};
 	const eventHandler = {};
 	const eventsList = {};
 	const accessibility = {};
