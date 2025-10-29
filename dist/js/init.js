@@ -86,21 +86,18 @@ window.component = window.component || {};
 window.component.commonCursor = /* @__PURE__ */ (function() {
   let els = {};
   const init = function() {
-    els.section = document.querySelector(".common-cursor");
+    els.section = document.querySelector(".cursor");
     if (!!els.section) {
-      setElements();
       BindEvents();
     }
   };
-  const setElements = function() {
-  };
-  const BindEvents = function() {
+  const BindEvents = function(event) {
     eventHandler.mouseMove();
   };
   const eventHandler = {
     mouseMove: function() {
-      document.addEventListener("mousemove", function(event) {
-        if (window.navigator.maxTouchPoints == 0) {
+      document.addEventListener("pointermove", function(event) {
+        if (event.pointerType == "mouse") {
           eventsList.mousePosition(event);
         }
       });

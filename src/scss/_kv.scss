@@ -6,7 +6,6 @@
 		align-items: flex-start;
 		background-color: #c4c6c7;
 		background-image: url(../images/noise.svg);
-		overflow: visible;
 	}
 	&__eyebrow {
 		display: flex;
@@ -78,12 +77,11 @@
 			display: block;
 			position: absolute;
 			bottom: 0;
-			width: 1000px;
+			width: 60%;
+			max-width: 1000px;
 			@media screen and (min-width: 1920px) {
-				width: 1110px;
-			}	
-			@media screen and (max-width: 1280px) {
-				width: 800px;
+				width: 1100px;
+				max-width: none;
 			}	
 			background-repeat: no-repeat;
 			background-size: 100%;
@@ -103,9 +101,11 @@
 			position: absolute;
 			left: 50%;
 			bottom: 0;
+			width: 100%;		
 			transform: translateX(-50%);
-			@media screen and (min-width: 769px) {	
+			@media screen and (min-width: 1155px) {	
 				height: 100%;
+				width: auto;
 			}
 		}
 	}
@@ -122,7 +122,7 @@
 		&__bg {
 			&::after, 
 			&::before {
-				width: 600px;
+				width: 80%;
 			}
 		}		
 	}
@@ -143,9 +143,6 @@
 				@media screen and (max-width: 534px) {
 					width: 260px;
 				}
-			}
-			img {
-				width: 100%;		
 			}
 		}			
 	}

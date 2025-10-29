@@ -58,6 +58,7 @@ table {
 
 p, span, ul, li, strong, div, a, button {
   font-family: "Noto Sans", sans-serif;
+  color: var(--black);
 }
 
 .contents {
@@ -85,45 +86,6 @@ p, span, ul, li, strong, div, a, button {
   height: calc(100dvh - var(--gnb-height));
   overflow: hidden;
 }
-.common-cursor {
-  position: fixed;
-  left: 0;
-  top: 0;
-  width: 180px;
-  height: 180px;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  mix-blend-mode: exclusion;
-  z-index: 2;
-}
-.common-cursor-circle {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 130px;
-  height: 130px;
-  background-color: #E07D9B;
-  opacity: 0.8;
-  border: 1px solid #E07D9B;
-  border-radius: 50%;
-}
-.common-cursor-svg {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 180px;
-  height: 180px;
-  fill: #cfcfcf;
-}
-.common-cursor-text {
-  font-family: "Noto Sans", sans-serif;
-  font-size: 12px;
-  letter-spacing: 1.4px;
-  transform-origin: center;
-  animation: rotate-text 10s linear infinite;
-}
 .common-description {
   font-family: "Noto Sans", sans-serif;
   font-size: 18px;
@@ -131,16 +93,10 @@ p, span, ul, li, strong, div, a, button {
 
 @keyframes rotate-text {
   100% {
-    transform: rotate(-360deg);
+    transform: rotate(1turn);
   }
 }
 @media screen and (min-width: 769px) and (max-width: 1024px) {
-  .common-cursor {
-    top: 0;
-    right: 0;
-    transform: none;
-    left: auto;
-  }
   .common-description {
     font-size: 16px;
   }
@@ -150,23 +106,6 @@ p, span, ul, li, strong, div, a, button {
   }
 }
 @media screen and (max-width: 768px) {
-  .common-cursor {
-    left: auto;
-    top: auto;
-    right: 10px;
-    bottom: 10px;
-    width: 120px;
-    height: 120px;
-    transform: none;
-  }
-  .common-cursor-circle {
-    width: 80px;
-    height: 80px;
-  }
-  .common-cursor-svg {
-    width: 120px;
-    height: 120px;
-  }
   .common-description {
     font-size: 16px;
   }
@@ -182,6 +121,71 @@ p, span, ul, li, strong, div, a, button {
     height: calc(100dvh - var(--gnb-height-mo));
   }
 }
+.cursor {
+  position: fixed;
+  width: 180px;
+  height: 180px;
+  pointer-events: none;
+  mix-blend-mode: exclusion;
+  z-index: 2;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cursor {
+    top: 0;
+    left: 0;
+    transform: translate(-50%, -50%);
+  }
+}
+@media (hover: none) and (pointer: coarse) {
+  .cursor {
+    top: 50%;
+    right: -60px;
+    transform: translateY(-50%);
+  }
+}
+.cursor-circle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 130px;
+  height: 130px;
+  background-color: #E07D9B;
+  opacity: 0.8;
+  border: 1px solid #E07D9B;
+  border-radius: 50%;
+}
+.cursor-svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 180px;
+  height: 180px;
+  fill: #cfcfcf;
+}
+.cursor-text {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 12px;
+  letter-spacing: 1.4px;
+  transform-origin: 90px 90px;
+  animation: rotate-text 10s linear infinite;
+}
+
+@media screen and (max-width: 768px) {
+  .cursor {
+    width: 120px;
+    height: 120px;
+  }
+  .cursor-circle {
+    width: 80px;
+    height: 80px;
+  }
+  .cursor-svg {
+    width: 120px;
+    height: 120px;
+  }
+}
 .gnb {
   position: sticky;
   top: 0;
@@ -189,6 +193,7 @@ p, span, ul, li, strong, div, a, button {
   z-index: 1;
   backdrop-filter: blur(3px);
   border-bottom: 1px solid var(--black);
+  box-shadow: 1px 1px 0px 0 #c8c8c8;
 }
 .gnb__wrap {
   display: flex;
@@ -247,7 +252,6 @@ p, span, ul, li, strong, div, a, button {
   align-items: flex-start;
   background-color: #c4c6c7;
   background-image: url(../images/noise.svg);
-  overflow: visible;
 }
 .component-kv__eyebrow {
   display: flex;
@@ -319,16 +323,13 @@ p, span, ul, li, strong, div, a, button {
   display: block;
   position: absolute;
   bottom: 0;
-  width: 1000px;
+  width: 60%;
+  max-width: 1000px;
 }
 @media screen and (min-width: 1920px) {
   .component-kv__bg::after, .component-kv__bg::before {
-    width: 1110px;
-  }
-}
-@media screen and (max-width: 1280px) {
-  .component-kv__bg::after, .component-kv__bg::before {
-    width: 800px;
+    width: 1100px;
+    max-width: none;
   }
 }
 .component-kv__bg::after, .component-kv__bg::before {
@@ -350,11 +351,13 @@ p, span, ul, li, strong, div, a, button {
   position: absolute;
   left: 50%;
   bottom: 0;
+  width: 100%;
   transform: translateX(-50%);
 }
-@media screen and (min-width: 769px) {
+@media screen and (min-width: 1155px) {
   .component-kv__bg img {
     height: 100%;
+    width: auto;
   }
 }
 
@@ -366,7 +369,7 @@ p, span, ul, li, strong, div, a, button {
     font-size: 180px;
   }
   .component-kv__bg::after, .component-kv__bg::before {
-    width: 600px;
+    width: 80%;
   }
 }
 @media screen and (max-width: 768px) {
@@ -383,10 +386,5 @@ p, span, ul, li, strong, div, a, button {
 @media screen and (max-width: 768px) and (max-width: 534px) {
   .component-kv__bg::after, .component-kv__bg::before {
     width: 260px;
-  }
-}
-@media screen and (max-width: 768px) {
-  .component-kv__bg img {
-    width: 100%;
   }
 }

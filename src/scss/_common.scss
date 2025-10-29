@@ -44,6 +44,7 @@ table {
 }
 p, span, ul, li, strong, div, a, button {
 	font-family: "Noto Sans", sans-serif;
+	color: var(--black);
 }
 
 .contents {
@@ -74,45 +75,6 @@ p, span, ul, li, strong, div, a, button {
 			overflow: hidden;
 		}
 	}
-	&-cursor {
-		position:fixed;
-		left:0;
-		top:0;
-		width: 180px;
-		height: 180px;
-		pointer-events:none;
-		transform: translate(-50%,-50%);
-		mix-blend-mode: exclusion;
-		z-index: 2;
-		&-circle {
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translate(-50%, -50%);
-			width: 130px;
-			height: 130px;
-			background-color: #E07D9B;
-			opacity: .8;
-			border:1px solid #E07D9B;
-			border-radius:50%;
-		}
-		&-svg {
-			position: absolute;
-			top: 50%;
-			left: 50%;
-			transform: translate(-50%, -50%);
-			width: 180px;
-			height: 180px;
-			fill: #cfcfcf;
-		}
-		&-text {
-			font-family: "Noto Sans", sans-serif;
-			font-size: 12px;
-    		letter-spacing: 1.4px;
-			transform-origin: center;
-			animation: rotate-text 10s linear infinite;
-		}
-	}
 	&-description {
 		font-family: "Noto Sans", sans-serif;
 		font-size: 18px;
@@ -120,18 +82,12 @@ p, span, ul, li, strong, div, a, button {
 }
 @keyframes rotate-text{
     100% {
-        transform: rotate(-360deg);
+        transform: rotate(1turn);
     }
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
 	.common {
-		&-cursor {
-			top: 0;
-			right: 0;
-			transform: none;
-			left: auto;
-		}
 		&-description {
 			font-size: 16px;
 		}
@@ -146,23 +102,6 @@ p, span, ul, li, strong, div, a, button {
 
 @media screen and (max-width: 768px) {
 	.common {
-		&-cursor {
-			left: auto;
-			top: auto;
-			right: 10px;
-			bottom: 10px;
-			width: 120px;
-			height: 120px;
-			transform: none;
-			&-circle {
-				width: 80px;
-				height: 80px;
-			}
-			&-svg {
-				width: 120px;
-				height: 120px;
-			}
-		}
 		&-description {
 			font-size: 16px;
 			@media screen and (max-width: 534px) {
