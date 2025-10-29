@@ -1,1 +1,308 @@
-window.component=window.component||{};window.component.common=(function(){let t={},r=function(){t.section=document.querySelector(".contents"),t.section&&(u(),d())},u=function(){t.cursor=t.section.querySelector(".common-cursor"),t.gnb=t.section.querySelector(".gnb"),t.fixedTrack=t.section.querySelectorAll(".common-fixed-track")},d=function(){m.mouseMove(),t.fixedTrack&&g.setTrack()},m={mouseMove:function(){document.addEventListener("mousemove",function(e){window.navigator.maxTouchPoints==0&&f.mousePosition(e)})}},f={mousePosition:function(e){let i=e.clientX,o=e.clientY;t.cursor.style.left=i+"px",t.cursor.style.top=o+"px"}},g={setTrack:function(){for(let e=0;e<t.fixedTrack.length;e++){let i=Number(t.fixedTrack[e].getAttribute("data-track-height"))||1;t.fixedTrack[e].style.height=window.innerHeight*i+"px"}},getProgress:function(){if(!t.fixedTrack)return;let e=window.innerHeight,i=window.scrollY+t.gnb.offsetHeight,o=window.scrollY+e;for(let n=0;n<t.fixedTrack.length;n++){let c=t.fixedTrack[n].offsetTop,l=t.fixedTrack[n].offsetTop+t.fixedTrack[n].offsetHeight,s=i<c,a=o>l,w=!s&&!a,p;if(w){let b=e-(t.gnb&&t.gnb.offsetHeight||0),h=l-c,y=Math.max(1,h-b),v=(i-c)/y;return p=Math.max(0,Math.min(1,v)),a&&(p=1),{viewPort:e,trackInside:w,progress:p}}}return{viewPort:window.innerHeight,trackInside:!1,progress:void 0}},getDirection:function(){let e=this.getProgress();if(!e.trackInside)return;if(this.lastP==null){this.lastP=e.progress;return}let o=e.progress-this.lastP>0?"down":"up";return this.lastP=e.progress,o}};return{init:r,fixedScrollEvent:g}})();window.component=window.component||{};window.component.gnb=(function(){let t={},r=function(){u(),d()},u=function(){t.gnb=document.querySelector(".gnb"),t.gnbButton=t.gnb.querySelectorAll("button"),t.home=document.querySelector("#home"),t.carousel=document.querySelector("#carousel")},d=function(){m.scroll()},m={scroll:function(){document.addEventListener("scroll",function(){f.activeGnbScroll(t.home),f.activeGnbScroll(t.carousel)})}},f={activeGnbScroll:function(e){let i=window.scrollY,o=e.getBoundingClientRect(),n=e.offsetTop;if(o.height+n>=i&&i>=n){let l=e.getAttribute("id");for(let s=0;s<t.gnbButton.length;++s)t.gnbButton[s].classList.toggle("is-active",t.gnbButton[s].getAttribute("data-value")===l)}}},g={};return{init:r}})();window.component=window.component||{};window.component.kv=(function(){let t={},r=.1,u=window.component.common.fixedScrollEvent,d=o=>Math.max(0,Math.min(1,o)),m=function(){t.section=document.querySelector(".component-kv"),t.section&&(f(),g())},f=function(){t.fixedInner=t.section.querySelector(".common-fixed-inner"),t.headlineTop=t.section.querySelector(".js-headline-top"),t.headlineBottom=t.section.querySelector(".js-headline-bottom"),t.alphabetTop=t.headlineTop.querySelectorAll("span"),t.alphabetBottom=t.headlineBottom.querySelectorAll("span"),t.eyebrow=t.section.querySelector(".js-eyebrow"),t.bg=t.section.querySelector(".js-background"),t.bgImg=t.bg.querySelector("img")},g=function(){e.scroll(),i.eyebrowChange(),i.fixedOverflowVisible()},e={scroll:function(){window.addEventListener("scroll",function(){let o=u.getProgress(),n=u.getDirection();o.trackInside&&(i.top(o,n),i.bottom(o,n))})}},i={top:function(o,n){let c=1-o.progress,l=Array.from(t.alphabetTop),s=n==="up"?l.reverse():l;for(let a=0;a<s.length;a++){let w=d(c);n==="up"&&(c+=r),n==="down"&&(c-=r),s[a].style.transform=`scaleY(${w})`}},bottom:function(o,n){let c=o.progress,l=Array.from(t.alphabetBottom),s=n==="up"?l:l.reverse();for(let a=s.length-1;a>=0;a--){let w=d(c);n==="up"&&(c-=r),n==="down"&&(c+=r),s[a].style.transform=`scaleY(${w})`}},eyebrowChange:function(){let o=["UI/UX","FrontEnd","Web"],n=0;t.eyebrow.innerText=o[n],setInterval(function(){n=(n+1)%o.length,t.eyebrow.innerHTML=o[n]},1300)},fixedOverflowVisible:function(){let o=t.fixedInner.clientHeight,n=t.bgImg.height;if(console.log(t.fixedInner.clientHeight,t.bgImg.height),o<n){let c=n-o;t.fixedInner.style.paddingBottom=c+"px",t.bgImg.style.top=0,t.bgImg.style.bottom="auto"}}};return{init:m}})();window.component=window.component||{};window.component.carousel=(function(){let t={},r=function(){t.section=document.querySelector(".component-carousel"),t.section&&(u(),d())},u=function(){},d=function(){},m={},f={},g={};return{init:r}})();window.component=window.component||{};window.component.initialize=(function(){return{init:function(){window.component.common.init(),window.component.gnb.init(),window.component.kv.init(),window.component.carousel.init()}}})();window.addEventListener("DOMContentLoaded",()=>{window.component.initialize.init()});
+// src/js/common.fixed.js
+window.component = window.component || {};
+window.component.commonFixed = /* @__PURE__ */ (function() {
+  let els = {};
+  const init = function() {
+    els.section = document.querySelector(".contents");
+    els.fixedTrack = els.section.querySelectorAll(".common-fixed-track");
+    if (!!els.fixedTrack) {
+      setElements();
+      BindEvents();
+    }
+  };
+  const setElements = function() {
+    els.gnb = els.section.querySelector(".gnb");
+  };
+  const BindEvents = function() {
+    eventslist.setTrack();
+    eventHandler.resize();
+  };
+  const eventHandler = {
+    resize: function() {
+      window.addEventListener("resize", eventslist.setTrack);
+    }
+  };
+  const eventslist = {
+    setTrack: function() {
+      for (let i = 0; i < els.fixedTrack.length; i++) {
+        const trackHeight = Number(els.fixedTrack[i].getAttribute("data-track-height")) || 1;
+        ;
+        els.fixedTrack[i].style.height = window.innerHeight * trackHeight + "px";
+      }
+    },
+    getProgress: function() {
+      if (!els.fixedTrack) return;
+      const viewPort = window.innerHeight;
+      const viewPortTop = window.scrollY + els.gnb.offsetHeight;
+      const viewPortBottom = window.scrollY + viewPort;
+      for (let i = 0; i < els.fixedTrack.length; i++) {
+        const elsTop = els.fixedTrack[i].offsetTop;
+        const elsBottom = els.fixedTrack[i].offsetTop + els.fixedTrack[i].offsetHeight;
+        const start = viewPortTop < elsTop;
+        const end = viewPortBottom > elsBottom;
+        const trackInside = !start && !end;
+        let progress;
+        if (trackInside) {
+          const usableVh = viewPort - (els.gnb && els.gnb.offsetHeight || 0);
+          const trackH = elsBottom - elsTop;
+          const denom = Math.max(1, trackH - usableVh);
+          const t = (viewPortTop - elsTop) / denom;
+          progress = Math.max(0, Math.min(1, t));
+          if (end) progress = 1;
+          return {
+            viewPort,
+            trackInside,
+            progress
+          };
+        }
+      }
+      return {
+        viewPort: window.innerHeight,
+        trackInside: false,
+        progress: void 0
+      };
+    },
+    getDirection: function() {
+      const s = this.getProgress();
+      if (!s.trackInside) return;
+      if (this.lastP == null) {
+        this.lastP = s.progress;
+        return;
+      }
+      const delta = s.progress - this.lastP;
+      const dir = delta > 0 ? "down" : "up";
+      this.lastP = s.progress;
+      return dir;
+    }
+  };
+  return {
+    init,
+    eventslist
+  };
+})();
+
+// src/js/common.cursor.js
+window.component = window.component || {};
+window.component.commonCursor = /* @__PURE__ */ (function() {
+  let els = {};
+  const init = function() {
+    els.section = document.querySelector(".common-cursor");
+    if (!!els.section) {
+      setElements();
+      BindEvents();
+    }
+  };
+  const setElements = function() {
+  };
+  const BindEvents = function() {
+    eventHandler.mouseMove();
+  };
+  const eventHandler = {
+    mouseMove: function() {
+      document.addEventListener("mousemove", function(event) {
+        if (window.navigator.maxTouchPoints == 0) {
+          eventsList.mousePosition(event);
+        }
+      });
+    }
+  };
+  const eventsList = {
+    mousePosition: function(event) {
+      let x = event.clientX;
+      let y = event.clientY;
+      els.section.style.left = x + "px";
+      els.section.style.top = y + "px";
+    }
+  };
+  return {
+    init
+  };
+})();
+
+// src/js/gnb.js
+window.component = window.component || {};
+window.component.gnb = /* @__PURE__ */ (function() {
+  let els = {};
+  const init = function() {
+    setElements();
+    BindEvents();
+  };
+  const setElements = function() {
+    els.gnb = document.querySelector(".gnb");
+    els.gnbButton = els.gnb.querySelectorAll("button");
+    els.home = document.querySelector("#home");
+    els.carousel = document.querySelector("#carousel");
+  };
+  const BindEvents = function() {
+    eventHandler.scroll();
+  };
+  const eventHandler = {
+    scroll: function() {
+      document.addEventListener("scroll", function() {
+        eventsList.activeGnbScroll(els.home);
+        eventsList.activeGnbScroll(els.carousel);
+      });
+    }
+  };
+  const eventsList = {
+    activeGnbScroll: function(section) {
+      const currentScroll = window.scrollY;
+      const rect = section.getBoundingClientRect();
+      const top = section.offsetTop;
+      const bottom = rect.height + top;
+      if (bottom >= currentScroll && currentScroll >= top) {
+        let sectionId = section.getAttribute("id");
+        for (let i = 0; i < els.gnbButton.length; ++i) {
+          els.gnbButton[i].classList.toggle("is-active", els.gnbButton[i].getAttribute("data-value") === sectionId);
+        }
+      }
+    }
+  };
+  const accessibility = {};
+  return {
+    init
+  };
+})();
+
+// src/js/kv.js
+window.component = window.component || {};
+window.component.kv = (function() {
+  let els = {};
+  let gap = 0.1;
+  let fixed = window.component.commonFixed.eventslist;
+  const clamp01 = (v) => Math.max(0, Math.min(1, v));
+  const init = function() {
+    els.section = document.querySelector(".component-kv");
+    if (!!els.section) {
+      setElements();
+      bindEvents();
+    }
+  };
+  const setElements = function() {
+    els.fixedInner = els.section.querySelector(".common-fixed-inner");
+    els.headlineTop = els.section.querySelector(".js-headline-top");
+    els.headlineBottom = els.section.querySelector(".js-headline-bottom");
+    els.alphabetTop = els.headlineTop.querySelectorAll("span");
+    els.alphabetBottom = els.headlineBottom.querySelectorAll("span");
+    els.eyebrow = els.section.querySelector(".js-eyebrow");
+    els.bg = els.section.querySelector(".js-background");
+    els.bgImg = els.bg.querySelector("img");
+  };
+  const bindEvents = function() {
+    eventHandler.scroll();
+    eventHandler.resize();
+    eventsList.eyebrowChange();
+    eventsList.fixedOverflowVisible();
+  };
+  const eventHandler = {
+    scroll: function() {
+      window.addEventListener("scroll", function() {
+        const p = fixed.getProgress();
+        const dir = fixed.getDirection();
+        if (p.trackInside) {
+          eventsList.top(p, dir);
+          eventsList.bottom(p, dir);
+        }
+      });
+    },
+    resize: function() {
+      window.addEventListener("resize", function() {
+        console.log("resize");
+        eventsList.fixedOverflowVisible();
+      });
+    }
+  };
+  const eventsList = {
+    top: function(p, dir) {
+      let prog = 1 - p.progress;
+      const spanArray = Array.from(els.alphabetTop);
+      const span = dir === "up" ? spanArray.reverse() : spanArray;
+      for (let i = 0; i < span.length; i++) {
+        const scale = clamp01(prog);
+        if (dir === "up") prog += gap;
+        if (dir === "down") prog -= gap;
+        span[i].style.transform = `scaleY(${scale})`;
+      }
+    },
+    bottom: function(p, dir) {
+      let prog = p.progress;
+      const spanArray = Array.from(els.alphabetBottom);
+      const span = dir === "up" ? spanArray : spanArray.reverse();
+      for (let i = span.length - 1; i >= 0; i--) {
+        const scale = clamp01(prog);
+        if (dir === "up") prog -= gap;
+        if (dir === "down") prog += gap;
+        span[i].style.transform = `scaleY(${scale})`;
+      }
+    },
+    eyebrowChange: function() {
+      const eyebrowChangeValue = ["UI/UX", "FrontEnd", "Web"];
+      let i = 0;
+      els.eyebrow.innerText = eyebrowChangeValue[i];
+      setInterval(function() {
+        i = (i + 1) % eyebrowChangeValue.length;
+        els.eyebrow.innerHTML = eyebrowChangeValue[i];
+      }, 1300);
+    },
+    fixedOverflowVisible: function() {
+      const fixedHeight = els.fixedInner.clientHeight;
+      const bgHeight = els.bgImg.height;
+      if (fixedHeight < bgHeight) {
+        const paddingValue = bgHeight - fixedHeight;
+        els.fixedInner.style.paddingBottom = paddingValue + "px";
+        console.log("\uACC4\uC0B0?", paddingValue);
+        els.bgImg.style.top = 0;
+        els.bgImg.style.bottom = "auto";
+      } else {
+        els.fixedInner.style.paddingBottom = 0;
+        els.bgImg.style.bottom = 0;
+        els.bgImg.style.top = "auto";
+      }
+    }
+  };
+  return {
+    init
+  };
+})();
+
+// src/js/carousel.js
+window.component = window.component || {};
+window.component.carousel = /* @__PURE__ */ (function() {
+  let els = {};
+  const init = function() {
+    els.section = document.querySelector(".component-carousel");
+    if (!!els.section) {
+      setElements();
+      BindEvents();
+    }
+  };
+  const setElements = function() {
+  };
+  const BindEvents = function() {
+  };
+  const eventHandler = {};
+  const eventsList = {};
+  const accessibility = {};
+  return {
+    init
+  };
+})();
+
+// src/js/init.js
+window.component = window.component || {};
+window.component.initialize = /* @__PURE__ */ (function() {
+  const init = function() {
+    window.component.commonFixed.init();
+    window.component.commonCursor.init();
+    window.component.gnb.init();
+    window.component.kv.init();
+    window.component.carousel.init();
+  };
+  return {
+    init
+  };
+})();
+window.addEventListener("DOMContentLoaded", () => {
+  window.component.initialize.init();
+});
+//# sourceMappingURL=init.js.map

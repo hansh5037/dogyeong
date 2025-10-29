@@ -2,7 +2,7 @@ window.component = window.component || {};
 window.component.kv = (function () {
 	let els = {};
 	let gap = 0.1;
-	let fixed = window.component.common.fixedScrollEvent;
+	let fixed = window.component.commonFixed.eventslist;
 
 	const clamp01 = v => Math.max(0, Math.min(1, v));
 
@@ -30,6 +30,7 @@ window.component.kv = (function () {
 
 	const bindEvents = function () {
 		eventHandler.scroll();
+		eventHandler.resize();
 		eventsList.eyebrowChange();
 		eventsList.fixedOverflowVisible();
 	};
@@ -44,6 +45,12 @@ window.component.kv = (function () {
 					eventsList.bottom(p, dir);
 				}
 			});
+		},
+		resize: function () {
+			window.addEventListener('resize', function(){
+				console.log('resize')
+				eventsList.fixedOverflowVisible();
+			})
 		}
 	};
 
@@ -53,7 +60,7 @@ window.component.kv = (function () {
 
 			const spanArray = Array.from(els.alphabetTop);
 			const span = (dir === 'up') ? spanArray.reverse() : spanArray;
-			
+
 			for (let i = 0; i < span.length; i++) {
 				const scale = clamp01(prog);
 				if (dir === 'up') prog += gap;
@@ -65,7 +72,7 @@ window.component.kv = (function () {
 			let prog = p.progress;
 
 			const spanArray = Array.from(els.alphabetBottom);
-			const span = (dir === 'up') ?  spanArray : spanArray.reverse();
+			const span = (dir === 'up') ? spanArray : spanArray.reverse();
 
 			for (let i = span.length - 1; i >= 0; i--) {
 				const scale = clamp01(prog);
@@ -88,14 +95,17 @@ window.component.kv = (function () {
 		fixedOverflowVisible: function () {
 			const fixedHeight = els.fixedInner.clientHeight;
 			const bgHeight = els.bgImg.height;
-			console.log(els.fixedInner.clientHeight ,els.bgImg.height)
 
 			if (fixedHeight < bgHeight) {
 				const paddingValue = bgHeight - fixedHeight;
-
 				els.fixedInner.style.paddingBottom = paddingValue + 'px';
+				console.log('계산?', paddingValue)
 				els.bgImg.style.top = 0;
 				els.bgImg.style.bottom = 'auto';
+			} else {
+				els.fixedInner.style.paddingBottom = 0;
+				els.bgImg.style.bottom = 0;
+				els.bgImg.style.top = 'auto';
 			}
 		}
 	};

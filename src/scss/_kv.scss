@@ -58,6 +58,9 @@
 			position: relative;
 			display: inline-block;
 			font-size: 280px;
+			@media screen and (max-width: 1280px) {
+				font-size: 260px;
+			}	
 			line-height: 1;
 			font-family: "Fjalla One", sans-serif;
 			color: var(--black);
@@ -79,6 +82,9 @@
 			@media screen and (min-width: 1920px) {
 				width: 1110px;
 			}	
+			@media screen and (max-width: 1280px) {
+				width: 800px;
+			}	
 			background-repeat: no-repeat;
 			background-size: 100%;
 		}
@@ -99,10 +105,11 @@
 			bottom: 0;
 			transform: translateX(-50%);
 			// mix-blend-mode: darken;
-			width: 1280px;
+			max-width: 1280px;
+			width: 100%;
 			@media screen and (min-width: 1920px) {
 				width: 1320px;
-			}			
+			}		
 		}
 	}
 }
