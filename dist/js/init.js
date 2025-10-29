@@ -190,9 +190,7 @@ window.component.kv = (function() {
   };
   const bindEvents = function() {
     eventHandler.scroll();
-    eventHandler.resize();
     eventsList.eyebrowChange();
-    eventsList.fixedOverflowVisible();
   };
   const eventHandler = {
     scroll: function() {
@@ -203,12 +201,6 @@ window.component.kv = (function() {
           eventsList.top(p, dir);
           eventsList.bottom(p, dir);
         }
-      });
-    },
-    resize: function() {
-      window.addEventListener("resize", function() {
-        console.log("resize");
-        eventsList.fixedOverflowVisible();
       });
     }
   };
@@ -243,21 +235,6 @@ window.component.kv = (function() {
         i = (i + 1) % eyebrowChangeValue.length;
         els.eyebrow.innerHTML = eyebrowChangeValue[i];
       }, 1300);
-    },
-    fixedOverflowVisible: function() {
-      const fixedHeight = els.fixedInner.clientHeight;
-      const bgHeight = els.bgImg.height;
-      if (fixedHeight < bgHeight) {
-        const paddingValue = bgHeight - fixedHeight;
-        els.fixedInner.style.paddingBottom = paddingValue + "px";
-        console.log("\uACC4\uC0B0?", paddingValue);
-        els.bgImg.style.top = 0;
-        els.bgImg.style.bottom = "auto";
-      } else {
-        els.fixedInner.style.paddingBottom = 0;
-        els.bgImg.style.bottom = 0;
-        els.bgImg.style.top = "auto";
-      }
     }
   };
   return {

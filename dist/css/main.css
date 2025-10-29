@@ -351,12 +351,10 @@ p, span, ul, li, strong, div, a, button {
   left: 50%;
   bottom: 0;
   transform: translateX(-50%);
-  max-width: 1280px;
-  width: 100%;
 }
-@media screen and (min-width: 1920px) {
+@media screen and (min-width: 769px) {
   .component-kv__bg img {
-    width: 1320px;
+    height: 100%;
   }
 }
 
@@ -369,9 +367,6 @@ p, span, ul, li, strong, div, a, button {
   }
   .component-kv__bg::after, .component-kv__bg::before {
     width: 600px;
-  }
-  .component-kv__bg img {
-    width: 800px;
   }
 }
 @media screen and (max-width: 768px) {

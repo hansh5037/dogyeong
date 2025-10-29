@@ -104,12 +104,9 @@
 			left: 50%;
 			bottom: 0;
 			transform: translateX(-50%);
-			// mix-blend-mode: darken;
-			max-width: 1280px;
-			width: 100%;
-			@media screen and (min-width: 1920px) {
-				width: 1320px;
-			}		
+			@media screen and (min-width: 769px) {	
+				height: 100%;
+			}
 		}
 	}
 }
@@ -126,9 +123,6 @@
 			&::after, 
 			&::before {
 				width: 600px;
-			}
-			img {
-				width: 800px;		
 			}
 		}		
 	}
