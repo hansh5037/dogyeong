@@ -109,6 +109,22 @@
 			}
 		}
 	}
+	&__svg {
+		display: block;
+		@media (orientation: landscape) {
+			display: none;
+		}
+		&-wrap {
+			width: 100vw;
+			height: 100vw;
+		}
+		&-text {
+			letter-spacing: .3px;
+			fill: #666;
+			transform-origin: 267px 267px;
+			transition: transform .5s;
+		}
+	}
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {

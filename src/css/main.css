@@ -90,6 +90,9 @@ p, span, ul, li, strong, div, a, button {
   font-family: "Noto Sans", sans-serif;
   font-size: 18px;
 }
+.common-mobile {
+  display: none;
+}
 
 @keyframes rotate-text {
   100% {
@@ -120,27 +123,25 @@ p, span, ul, li, strong, div, a, button {
     top: var(--gnb-height-mo);
     height: calc(100dvh - var(--gnb-height-mo));
   }
+  .common-mobile {
+    display: block;
+  }
 }
 .cursor {
   position: fixed;
+  top: 0;
+  left: 0;
+  transform: translate(-50%, -50%);
   width: 180px;
-  height: 180px;
+  height: auto;
+  aspect-ratio: 1/1;
   pointer-events: none;
   mix-blend-mode: exclusion;
   z-index: 2;
 }
-@media (hover: hover) and (pointer: fine) {
-  .cursor {
-    top: 0;
-    left: 0;
-    transform: translate(-50%, -50%);
-  }
-}
 @media (hover: none) and (pointer: coarse) {
   .cursor {
-    top: 50%;
-    right: -60px;
-    transform: translateY(-50%);
+    display: none;
   }
 }
 .cursor-circle {
@@ -169,23 +170,13 @@ p, span, ul, li, strong, div, a, button {
   font-size: 12px;
   letter-spacing: 1.4px;
   transform-origin: 90px 90px;
-  animation: rotate-text 10s linear infinite;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cursor-text {
+    animation: rotate-text 10s linear infinite;
+  }
 }
 
-@media screen and (max-width: 768px) {
-  .cursor {
-    width: 120px;
-    height: 120px;
-  }
-  .cursor-circle {
-    width: 80px;
-    height: 80px;
-  }
-  .cursor-svg {
-    width: 120px;
-    height: 120px;
-  }
-}
 .gnb {
   position: sticky;
   top: 0;
@@ -359,6 +350,24 @@ p, span, ul, li, strong, div, a, button {
     height: 100%;
     width: auto;
   }
+}
+.component-kv__svg {
+  display: block;
+}
+@media (orientation: landscape) {
+  .component-kv__svg {
+    display: none;
+  }
+}
+.component-kv__svg-wrap {
+  width: 100vw;
+  height: 100vw;
+}
+.component-kv__svg-text {
+  letter-spacing: 0.3px;
+  fill: #666;
+  transform-origin: 267px 267px;
+  transition: transform 0.5s;
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {

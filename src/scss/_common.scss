@@ -79,6 +79,9 @@ p, span, ul, li, strong, div, a, button {
 		font-family: "Noto Sans", sans-serif;
 		font-size: 18px;
 	}
+	&-mobile {
+		display: none;
+	}
 }
 @keyframes rotate-text{
     100% {
@@ -113,6 +116,9 @@ p, span, ul, li, strong, div, a, button {
 				top: var(--gnb-height-mo);
 				height: calc(100dvh - var(--gnb-height-mo));
 			}
+		}
+		&-mobile {
+			display: block;
 		}
 	}
 }

@@ -1,19 +1,16 @@
 .cursor {
 	position:fixed;
+	top:0;
+	left:0;
+	transform: translate(-50%,-50%);	
 	width: 180px;
-	height: 180px;
+	height: auto;
+	aspect-ratio: 1 / 1;
 	pointer-events:none;
 	mix-blend-mode: exclusion;
 	z-index: 2;
-	@media (hover: hover) and (pointer: fine) {
-		top:0;
-		left:0;
-		transform: translate(-50%,-50%);
-	}
-	@media (hover: none) and (pointer: coarse) {
-		top: 50%;
-		right: -60px;
-		transform: translateY(-50%);			
+	@media (hover: none) and (pointer: coarse) { //모바일, 태블릿
+		display: none;
 	}
 	&-circle {
 		position: absolute;
@@ -41,26 +38,8 @@
 		font-size: 12px;
 		letter-spacing: 1.4px;
 		transform-origin: 90px 90px;
-		animation: rotate-text 10s linear infinite;
-	}
-}
-
-@media screen and (min-width: 769px) and (max-width: 1024px) {
-	.common {
-	}
-}
-
-@media screen and (max-width: 768px) {
-	.cursor {
-		width: 120px;
-		height: 120px;
-		&-circle {
-			width: 80px;
-			height: 80px;
-		}
-		&-svg {
-			width: 120px;
-			height: 120px;
+		@media (hover: hover) and (pointer: fine) {
+			animation: rotate-text 10s linear infinite;
 		}
 	}
 }

@@ -16,7 +16,7 @@ window.component.commonResize = (function () {
 			const widthChanged = w !== lastW;
 			const deltaH = Math.abs(h - lastH);
 			const relative = deltaH / Math.max(1, lastH);
-			if (!widthChanged && relative < 0.06) { // ← 6% 미만 변화는 무시
+			if (!widthChanged && relative < 0.06) {
 			lastH = h;
 			return;
 			}

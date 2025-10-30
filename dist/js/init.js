@@ -218,6 +218,7 @@ window.component.kv = (function() {
     els.eyebrow = els.section.querySelector(".js-eyebrow");
     els.bg = els.section.querySelector(".js-background");
     els.bgImg = els.bg.querySelector("img");
+    els.svg = els.section.querySelector(".js-svg");
   };
   const bindEvents = function() {
     eventHandler.scroll();
@@ -229,14 +230,15 @@ window.component.kv = (function() {
         const p = fixed.getProgress();
         const dir = fixed.getDirection();
         if (p.trackInside) {
-          eventsList.top(p, dir);
-          eventsList.bottom(p, dir);
+          eventsList.headlineTop(p, dir);
+          eventsList.headlineBottom(p, dir);
+          eventsList.rotateSvg(p);
         }
       });
     }
   };
   const eventsList = {
-    top: function(p, dir) {
+    headlineTop: function(p, dir) {
       let prog = 1 - p.progress;
       const spanArray = Array.from(els.alphabetTop);
       const span = dir === "up" ? spanArray.reverse() : spanArray;
@@ -247,7 +249,7 @@ window.component.kv = (function() {
         span[i].style.transform = `scaleY(${scale})`;
       }
     },
-    bottom: function(p, dir) {
+    headlineBottom: function(p, dir) {
       let prog = p.progress;
       const spanArray = Array.from(els.alphabetBottom);
       const span = dir === "up" ? spanArray : spanArray.reverse();
@@ -266,6 +268,10 @@ window.component.kv = (function() {
         i = (i + 1) % eyebrowChangeValue.length;
         els.eyebrow.innerHTML = eyebrowChangeValue[i];
       }, 1300);
+    },
+    rotateSvg: function(p) {
+      const rotate = Math.round(p.progress * 360);
+      els.svg.style.transform = `rotate(${rotate}deg)`;
     }
   };
   return {
