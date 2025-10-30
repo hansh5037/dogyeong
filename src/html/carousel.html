@@ -1,14 +1,25 @@
-<section id="carousel">
-	<div class="component-carousel" style="height: 5000px;">
+<section class="common-wrap" id="carousel">
+	<div class="component-carousel js-carousel">
 		<div class="component-carousel__container">
-			<div class="component-carousel__wrap">
-				<div class="component-carousel__slide">1</div>
-				<div class="component-carousel__slide">2</div>
-				<div class="component-carousel__slide">3</div>
-				<div class="component-carousel__slide">4</div>
-				<div class="component-carousel__slide">5</div>
-				<div class="component-carousel__slide">6</div>
+			<div class="component-carousel__wrap js-carousel-wrap">
+				<div class="component-carousel__slide js-carousel-slide is-active">
+					<div class="component-carousel__slide-title">
+						Title
+					</div>
+					<div class="component-carousel__slide-content">
+						<!-- <img src="../images/" class=""  alt=""> -->
+					</div>
+				</div>
+				<div class="component-carousel__slide js-carousel-slide"></div>
+				<div class="component-carousel__slide js-carousel-slide"></div>
+				<div class="component-carousel__slide js-carousel-slide"></div>
+				<div class="component-carousel__slide js-carousel-slide"></div>
+			</div>
+			<div class="component-carousel__navigation js-carousel-navigation js-bg-img">
+				<button type="button" disabled="button" class="component-carousel__arrow component-carousel__arrow--prev js-carousel-arrow js-carousel-prev" title="Preview"></button>
+				<button type="button" class="component-carousel__arrow component-carousel__arrow--next js-carousel-arrow js-carousel-next" title="Next"></button>
 			</div>
 		</div>
+		<div class="component-carousel__pagination js-carousel-pagination"></div>
 	</div>
 </section>

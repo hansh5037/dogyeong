@@ -119,12 +119,12 @@
 			height: 100vw;
 		}
 		&-text {
-			letter-spacing: .3px;
+			letter-spacing: .4px;
 			fill: #666;
 			transform-origin: 267px 267px;
 			transition: transform .5s;
 		}
-	}
+	}	
 }
 
 @media screen and (min-width: 769px) and (max-width: 1024px) {
@@ -149,7 +149,7 @@
 		&__headline {
 			margin-top: 30px;
 			&-text {
-				font-size: 22vw;
+				font-size: 24vw;
 			}
 		}
 		&__bg {
@@ -160,6 +160,31 @@
 					width: 260px;
 				}
 			}
-		}			
+		}
+		&__description {
+			width: 100%;
+			margin-bottom: auto;
+			padding: 4%;
+			background-color: #E07D9B;
+			white-space: nowrap;
+			mix-blend-mode: exclusion;
+			font-size: 2.8vw;
+		}
+		&__svg {
+			display: block;
+			@media (orientation: landscape) {
+				display: none;
+			}
+			&-wrap {
+				width: 100vw;
+				height: 100vw;
+			}
+			&-text {
+				letter-spacing: .4px;
+				fill: #666;
+				transform-origin: 267px 267px;
+				transition: transform .5s;
+			}
+		}
 	}
 }

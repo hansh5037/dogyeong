@@ -93,6 +93,9 @@ p, span, ul, li, strong, div, a, button {
 .common-mobile {
   display: none;
 }
+.common-wrap {
+  padding: 100px 0;
+}
 
 @keyframes rotate-text {
   100% {
@@ -106,6 +109,9 @@ p, span, ul, li, strong, div, a, button {
   .common-fixed-inner {
     top: var(--gnb-height-tb);
     height: calc(100svh - var(--gnb-height-tb));
+  }
+  .common-wrap {
+    padding: 60px 0;
   }
 }
 @media screen and (max-width: 768px) {
@@ -125,6 +131,9 @@ p, span, ul, li, strong, div, a, button {
   }
   .common-mobile {
     display: block;
+  }
+  .common-wrap {
+    padding: 30px 0;
   }
 }
 .cursor {
@@ -364,7 +373,7 @@ p, span, ul, li, strong, div, a, button {
   height: 100vw;
 }
 .component-kv__svg-text {
-  letter-spacing: 0.3px;
+  letter-spacing: 0.4px;
   fill: #666;
   transform-origin: 267px 267px;
   transition: transform 0.5s;
@@ -386,7 +395,7 @@ p, span, ul, li, strong, div, a, button {
     margin-top: 30px;
   }
   .component-kv__headline-text {
-    font-size: 22vw;
+    font-size: 24vw;
   }
   .component-kv__bg::after, .component-kv__bg::before {
     width: 300px;
@@ -395,5 +404,150 @@ p, span, ul, li, strong, div, a, button {
 @media screen and (max-width: 768px) and (max-width: 534px) {
   .component-kv__bg::after, .component-kv__bg::before {
     width: 260px;
+  }
+}
+@media screen and (max-width: 768px) {
+  .component-kv__description {
+    width: 100%;
+    margin-bottom: auto;
+    padding: 4%;
+    background-color: #E07D9B;
+    white-space: nowrap;
+    mix-blend-mode: exclusion;
+    font-size: 2.8vw;
+  }
+  .component-kv__svg {
+    display: block;
+  }
+}
+@media screen and (max-width: 768px) and (orientation: landscape) {
+  .component-kv__svg {
+    display: none;
+  }
+}
+@media screen and (max-width: 768px) {
+  .component-kv__svg-wrap {
+    width: 100vw;
+    height: 100vw;
+  }
+  .component-kv__svg-text {
+    letter-spacing: 0.4px;
+    fill: #666;
+    transform-origin: 267px 267px;
+    transition: transform 0.5s;
+  }
+}
+.component-carousel {
+  position: relative;
+  overflow: hidden;
+  touch-action: pan-y;
+}
+.component-carousel__wrap {
+  position: relative;
+  display: flex;
+  transition: ease-out;
+  transition-duration: 0.6s;
+  touch-action: pan-y;
+}
+.component-carousel__container {
+  position: relative;
+  width: 800px;
+  margin: 0 auto;
+}
+.component-carousel__slide {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 800px;
+  min-height: 600px;
+  background-color: lightgrey;
+  border-radius: 30px;
+  margin-right: 20px;
+}
+.component-carousel__slide:last-child {
+  margin-right: 0;
+}
+.component-carousel__slide-title {
+  font-size: 40px;
+  line-height: 1.5;
+}
+.component-carousel__navigation {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: 50%;
+  left: 50%;
+  height: 0;
+  width: 920px;
+  transform: translate(-50%, -50%);
+}
+.component-carousel__arrow {
+  width: 50px;
+  height: 50px;
+}
+.component-carousel__arrow:disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+.component-carousel__arrow::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.component-carousel__arrow--prev {
+  transform: scale(-1) translateY(50%);
+}
+.component-carousel__arrow--next {
+  transform: scale(1) translateY(-50%);
+}
+.component-carousel__pagination {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0 2px;
+}
+.component-carousel__bullet {
+  padding: 8px;
+}
+.component-carousel__bullet.is-active::after {
+  background-color: #000;
+}
+.component-carousel__bullet::after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid #000;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 768px) {
+  .component-carousel__wrap {
+    transition-duration: 0.3s;
+  }
+  .component-carousel__container {
+    width: 312px;
+  }
+  .component-carousel__slide {
+    display: block;
+    min-height: 400px;
+    max-width: 312px;
+    width: 100%;
+    height: auto;
+    border-radius: 24px;
+    margin-right: 12px;
+    font-size: 20px;
+  }
+  .component-carousel__slide-content {
+    position: relative;
+  }
+  .component-carousel__navigation {
+    width: 340px;
+  }
+  .component-carousel__arrow {
+    width: 30px;
+    height: 30px;
   }
 }

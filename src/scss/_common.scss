@@ -82,6 +82,9 @@ p, span, ul, li, strong, div, a, button {
 	&-mobile {
 		display: none;
 	}
+	&-wrap {
+		padding: 100px 0;
+	}
 }
 @keyframes rotate-text{
     100% {
@@ -99,6 +102,9 @@ p, span, ul, li, strong, div, a, button {
 				top: var(--gnb-height-tb);
 				height: calc(100svh - var(--gnb-height-tb));
 			}
+		}
+		&-wrap {
+			padding: 60px 0;
 		}
 	}
 }
@@ -119,6 +125,9 @@ p, span, ul, li, strong, div, a, button {
 		}
 		&-mobile {
 			display: block;
+		}
+		&-wrap {
+			padding: 30px 0;
 		}
 	}
 }
