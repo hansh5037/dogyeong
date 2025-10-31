@@ -46,6 +46,9 @@ p, span, ul, li, strong, div, a, button {
 	font-family: "Noto Sans", sans-serif;
 	color: var(--black);
 }
+img, video {
+	width: 100%;
+}
 
 .contents {
 	background-color: var(--black);
