@@ -42,9 +42,9 @@ window.component.commonCarousel = (function () {
 
             const bindEvents = function () {
 				if (els.carouselPagination) {
-					setCarousel.setPagination();
+					carouselEventList.setPagination();
 				}
-				setCarousel.setInitialUi();
+				carouselEventList.slideChange();
                 eventHandler.on();
             };
 
@@ -102,17 +102,7 @@ window.component.commonCarousel = (function () {
                 }
             };
 
-            const setCarousel = {
-                setInitialUi: function () {
-                    carouselEventList.toggleActiveClass(els.carouselSlides);
-                    if (els.carouselPagination) {
-                        carouselEventList.toggleActiveClass(els.carouselPaginationBullet || []);
-                    }
-                    if (els.carouselNavigation) {
-                        carouselEventList.updateDisabledArrow();
-                    }
-                    carouselEventList.moveToTransform();
-                },
+            const carouselEventList = {
                 setPagination: function () {
                     for (let i = 0; i < els.carouselSlides.length; i++) {
                         const bulletButton = document.createElement('button');
@@ -121,10 +111,7 @@ window.component.commonCarousel = (function () {
                         els.carouselPagination.append(bulletButton);
                     }
                     els.carouselPaginationBullet = els.carouselPagination.querySelectorAll('.component-carousel__bullet');
-                }
-            };
-
-            const carouselEventList = {
+                },
                 slideChange: function () {
                     if (els.carouselPagination) {
                         carouselEventList.toggleActiveClass(els.carouselPaginationBullet);
