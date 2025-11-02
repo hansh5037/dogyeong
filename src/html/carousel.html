@@ -1,8 +1,8 @@
 <section class="common-wrap" id="carousel">
 	<div class="component-carousel js-carousel">
 		<div class="component-carousel__container">
-			<div class="component-carousel__wrap js-carousel-wrap">
-				<div class="component-carousel__slide js-carousel-slide">
+			<ul role="list" class="component-carousel__wrap js-carousel-wrap">
+				<li class="component-carousel__slide js-carousel-slide">
 					<div class="component-carousel__slide-title">
 					</div>
 					<div class="component-carousel__slide-content">
@@ -16,17 +16,17 @@
 							<img src="../images/bambi-active.png" class=""  alt="">
 						</div>
 					</div>
-				</div>
-				<div class="component-carousel__slide js-carousel-slide"></div>
-				<div class="component-carousel__slide js-carousel-slide"></div>
-				<div class="component-carousel__slide js-carousel-slide"></div>
-				<div class="component-carousel__slide js-carousel-slide"></div>
-			</div>
+				</li>
+				<li class="component-carousel__slide js-carousel-slide"></li>
+				<li class="component-carousel__slide js-carousel-slide"></li>
+				<li class="component-carousel__slide js-carousel-slide"></li>
+				<li class="component-carousel__slide js-carousel-slide"></li>
+			</ul>
 			<div class="component-carousel__navigation js-carousel-navigation js-bg-img">
-				<button type="button" disabled="button" class="component-carousel__arrow component-carousel__arrow--prev js-carousel-arrow js-carousel-prev" title="Preview"></button>
-				<button type="button" class="component-carousel__arrow component-carousel__arrow--next js-carousel-arrow js-carousel-next" title="Next"></button>
+				<button type="button" class="component-carousel__arrow component-carousel__arrow--prev js-carousel-arrow js-carousel-prev" aria-label="Previous"></button>
+				<button type="button" class="component-carousel__arrow component-carousel__arrow--next js-carousel-arrow js-carousel-next" aria-label="Next"></button>
 			</div>
 		</div>
-		<div class="component-carousel__pagination js-carousel-pagination"></div>
+		<ul role="list" class="component-carousel__pagination js-carousel-pagination"></ul>
 	</div>
 </section>
