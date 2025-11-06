@@ -1,0 +1,125 @@
+$slide-width-large: 1200px;
+$slide-width: 1000px;
+$slide-height: 720px;
+
+.component-overview {
+	position: relative;
+	overflow-x: hidden;
+	touch-action: pan-y;
+	&__container {
+		position: relative;
+        width: $slide-width;
+		@media screen and (min-width: 1920px) {
+			width: $slide-width-large;
+		}		
+		margin: 0 auto;
+	}
+	&__slide {
+		&-title {
+			position: absolute;
+    		bottom: 100%;
+            font-size: 40px;
+            line-height: 1.5;
+		}
+		&-headline {
+			position: relative;
+			z-index: 10;
+			width: $slide-width;
+			display: block;
+			margin-right: auto;
+			margin-left: auto;
+			&-num {
+				position: relative;
+				bottom: -80px;
+				line-height: 1;
+				font-size: 230px;
+				color: #fff !important;
+				font-family: "Fjalla One", sans-serif;
+			}
+			&-title {
+				color: #fff !important;
+				top: 100px;
+				left: 20px;
+				font-size: 32px;
+			}
+		}
+		&-content {
+			position: relative;
+			display: grid;
+			height: 100%;
+		}
+		&-image {
+			&--main,
+			&--bg {
+				display: flex;
+				grid-column: 1;
+    			grid-row: 1;
+       			border-radius: 20px;
+				overflow: hidden;
+			}
+			&--main {
+				z-index: 1;
+				flex-direction: column;
+			}
+			&--active {
+				position: absolute;
+				bottom: 0;
+				transform: scale(0);
+				transition: bottom .6s, transform .6s;
+				.is-active & {
+					bottom: 40%;
+					transform: scale(1);
+				}
+			}
+		}
+		&-text {
+			width: 60%;
+			height: auto;
+			margin: auto;
+			padding: 20px 12px;
+			background-color: rgba(255, 255, 255, 0.1);
+			backdrop-filter: blur(20px);
+			border-radius: 30px;
+			box-shadow: 2px 2px 10px #33333378;
+			overflow: hidden;
+		}
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.component-overview {
+		&__wrap {
+			transition-duration: .3s;
+		}
+		&__container {
+            width: 312px;
+		}
+		&__slide {
+			display: block;
+            max-width: 312px;
+			width: 100%;
+			aspect-ratio: 3/4;
+            border-radius: 24px;
+            margin-right: 20px;
+			font-size: 20px;
+			&-content {
+				position: relative;
+				// @include mo-img-size(312, 334);
+			}
+			&-text {
+				width: 80%;
+				min-height: 50%;
+				padding: 12px;
+				border-radius: 20px;
+			}
+		}
+		&__navigation {
+            width: 340px;
+		}
+		&__arrow {
+            width: 30px;
+            height: 30px;
+		}
+	}
+}
+

@@ -1,6 +1,7 @@
-@use "./variables";
-@use "./common";
+@use "./common/variables";
+@use "./common/common";
+@use "./common/carousel";
 @use "./cursor";
 @use "./gnb";
 @use "./kv";
-@use "./carousel";
+@use "./overview";

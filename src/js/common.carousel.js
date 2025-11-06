@@ -49,29 +49,16 @@ window.component.commonCarousel = (function () {
 			};
 
 			const eventHandler = {
-				onNextClick: null,
-				onPrevClick: null,
-				onPagClick: null,
-
 				on: function () {
 					// click
 					if (els.carouselNextArrow) {
-						this.onNextClick = function (event) {
-							carouselEventList.onArrowClick(event);
-						};
-						els.carouselNextArrow.addEventListener('click', this.onNextClick);
+						els.carouselNextArrow.addEventListener('click', clickEventList.onArrowClick);
 					}
 					if (els.carouselPrevArrow) {
-						this.onPrevClick = function (event) {
-							carouselEventList.onArrowClick(event);
-						};
-						els.carouselPrevArrow.addEventListener('click', this.onPrevClick);
+						els.carouselPrevArrow.addEventListener('click', clickEventList.onArrowClick);
 					}
 					if (els.carouselPagination) {
-						this.onPagClick = function (event) {
-							carouselEventList.onBulletClick(event);
-						};
-						els.carouselPagination.addEventListener('click', this.onPagClick);
+						els.carouselPagination.addEventListener('click', clickEventList.onBulletClick);
 					}
 
 					// drag 
@@ -81,17 +68,15 @@ window.component.commonCarousel = (function () {
 					window.addEventListener('pointercancel', dragEventList.dragEnd);
 				},
 				off: function () {
+					// click
 					if (els.carouselNextArrow) {
-						els.carouselNextArrow.removeEventListener('click', this.onNextClick);
-						this.onNextClick = null;
+						els.carouselNextArrow.removeEventListener('click', clickEventList.onArrowClick);
 					}
 					if (els.carouselPrevArrow) {
-						els.carouselPrevArrow.removeEventListener('click', this.onPrevClick);
-						this.onPrevClick = null;
+						els.carouselPrevArrow.removeEventListener('click', clickEventList.onArrowClick);
 					}
 					if (els.carouselPagination) {
-						els.carouselPagination.removeEventListener('click', this.onPagClick);
-						this.onPagClick = null;
+						els.carouselPagination.removeEventListener('click', clickEventList.onBulletClick);
 					}
 
 					// drag
@@ -108,13 +93,26 @@ window.component.commonCarousel = (function () {
 						const bulletButtonWrap = document.createElement('li');
 						const bulletButton = document.createElement('button');
 						bulletButton.type = 'button';
-						bulletButton.className = `component-carousel__bullet${i === 0 ? ' is-active' : ''}`;
+						bulletButton.className = `js-carousel-bullet${i === 0 ? ' is-active' : ''}`;
 						bulletButton.setAttribute('aria-label', i+1 +'/'+els.carouselSlides.length);
 						
 						els.carouselPagination.append(bulletButtonWrap);
 						bulletButtonWrap.append(bulletButton);
 					}
-					els.carouselPaginationBullet = els.carouselPagination.querySelectorAll('.component-carousel__bullet');
+					els.carouselPaginationBullet = els.carouselPagination.querySelectorAll('.js-carousel-bullet');
+				},
+				moveToTransform: function () {
+					let wrapperRect = els.carouselWrap.getBoundingClientRect().left;
+					let activeSlideRect = els.carouselSlides[activeIndex].getBoundingClientRect().left;
+					let rect = activeSlideRect - wrapperRect;
+
+					els.carouselWrap.style.transform = `translateX(-${rect}px)`;
+					return rect;
+				},
+				toggleActiveClass: function (list) {
+					for (let i = 0; i < list.length; i++) {
+						list[i].classList.toggle('is-active', i === activeIndex);
+					};
 				},
 				slideChange: function () {
 					if (els.carouselPagination) {
@@ -132,7 +130,10 @@ window.component.commonCarousel = (function () {
 					if (typeof options.onSlideChange === 'function') {
 						options.onSlideChange(activeIndex);
 					}
-				},
+				}
+			};
+			
+			const clickEventList = {
 				onArrowClick: function (event) {
 					const isNext = event.target === els.carouselNextArrow;
 					const isPrev = event.target === els.carouselPrevArrow;
@@ -151,33 +152,18 @@ window.component.commonCarousel = (function () {
 					carouselEventList.slideChange();
 				},
 				onBulletClick: function (event) {
-					const clickedBullet = event.target.closest('.component-carousel__bullet');
+					const clickedBullet = event.target.closest('.js-carousel-bullet');
 					const clickBulletIndex = Array.prototype.indexOf.call(
 						els.carouselPaginationBullet,
 						clickedBullet
 					);
-
 					if (!clickedBullet || clickBulletIndex < 0) return;
 					activeIndex = clickBulletIndex;
 
 					carouselEventList.slideChange();
-				},
-				moveToTransform: function () {
-					let wrapperRect = els.carouselWrap.getBoundingClientRect().left;
-					let activeSlideRect = els.carouselSlides[activeIndex]
-						.getBoundingClientRect().left;
-					let rect = activeSlideRect - wrapperRect;
-
-					els.carouselWrap.style.transform = `translateX(-${rect}px)`;
-					return rect;
-				},
-				toggleActiveClass: function (list) {
-					for (let i = 0; i < list.length; i++) {
-						list[i].classList.toggle('is-active', i === activeIndex);
-					};
-				}
+				}				
 			};
-
+			
 			const dragEventList = {
 				dragStart: function (event) {
 					if (!event.isPrimary) return;
@@ -253,8 +239,8 @@ window.component.commonCarousel = (function () {
 					}
 				};
 				if (els.carouselNavigation) {
-					els.carouselNextArrow.removeAttribute('disabled');
-					els.carouselPrevArrow.removeAttribute('disabled');
+					els.carouselNextArrow.removeAttribute('aria-disabled');
+					els.carouselPrevArrow.removeAttribute('aria-disabled');
 				};
 				if (els.carouselPagination) els.carouselPagination.innerHTML = '';
 				activeIndex = 0;

@@ -61,6 +61,10 @@ p, span, ul, li, strong, div, a, button {
   color: var(--black);
 }
 
+img, video, picture {
+  width: 100%;
+}
+
 .contents {
   background-color: var(--black);
 }
@@ -77,6 +81,18 @@ p, span, ul, li, strong, div, a, button {
   border: 0;
 }
 
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+}
+
+.skip-link:focus {
+  left: 16px;
+  top: 16px;
+  z-index: 1000;
+}
+
 .common-fixed-track {
   position: relative;
 }
@@ -86,9 +102,19 @@ p, span, ul, li, strong, div, a, button {
   height: calc(100svh - var(--gnb-height));
   overflow: hidden;
 }
+.common-title {
+  font-size: 20px;
+  line-height: 1.8;
+}
+.common-titlestrong {
+  display: block;
+}
 .common-description {
-  font-family: "Noto Sans", sans-serif;
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 1.5;
+}
+.common-description:last-child {
+  margin-bottom: 10px;
 }
 .common-mobile {
   display: none;
@@ -103,8 +129,14 @@ p, span, ul, li, strong, div, a, button {
   }
 }
 @media screen and (min-width: 769px) and (max-width: 1024px) {
+  .common-title {
+    font-size: 18px;
+  }
   .common-description {
-    font-size: 16px;
+    font-size: 15px;
+  }
+  .common-description:last-child {
+    margin-bottom: 8px;
   }
   .common-fixed-inner {
     top: var(--gnb-height-tb);
@@ -115,16 +147,15 @@ p, span, ul, li, strong, div, a, button {
   }
 }
 @media screen and (max-width: 768px) {
-  .common-description {
+  .common-title {
     font-size: 16px;
   }
-}
-@media screen and (max-width: 768px) and (max-width: 534px) {
   .common-description {
     font-size: 12px;
   }
-}
-@media screen and (max-width: 768px) {
+  .common-description:last-child {
+    margin-bottom: 6px;
+  }
   .common-fixed-inner {
     top: var(--gnb-height-mo);
     height: calc(100dvh - var(--gnb-height-mo));
@@ -134,6 +165,130 @@ p, span, ul, li, strong, div, a, button {
   }
   .common-wrap {
     padding: 30px 0;
+  }
+}
+.js-carousel-wrap {
+  position: relative;
+  display: flex;
+  transition: ease-out;
+  transition-duration: 0.6s;
+  touch-action: pan-y;
+}
+
+.js-carousel-slide {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 auto;
+  width: 1000px;
+  border-radius: 20px;
+}
+@media screen and (min-width: 1920px) {
+  .js-carousel-slide {
+    width: 1200px;
+  }
+}
+.js-carousel-slide {
+  aspect-ratio: 3/2;
+  background-color: lightgrey;
+  margin-right: 60px;
+}
+.js-carousel-slide:last-child {
+  margin-right: 0;
+}
+
+.js-carousel-navigation {
+  position: absolute;
+  display: flex;
+  justify-content: space-between;
+  top: 50%;
+  left: 50%;
+  height: 0;
+  width: 1060px;
+}
+@media screen and (min-width: 1920px) {
+  .js-carousel-navigation {
+    width: 1260px;
+  }
+}
+.js-carousel-navigation {
+  max-width: 100vw;
+  transform: translate(-50%, -50%);
+}
+
+.js-carousel-arrow {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 1px solid var(--black);
+  background-color: rgba(221, 221, 221, 0.8509803922);
+}
+.js-carousel-arrow[aria-disabled=true] {
+  pointer-events: none;
+  opacity: 0.3;
+}
+.js-carousel-arrow::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  width: 17px;
+  border: 3px solid var(--black);
+  border-width: 3px 3px 0 0;
+  aspect-ratio: 1/1;
+  transform: translateY(-50%) rotate(45deg);
+}
+.js-carousel-arrow .js-carousel-prev {
+  transform: scale(-1) translateY(50%);
+}
+.js-carousel-arrow .js-carousel-next {
+  transform: scale(1) translateY(-50%);
+}
+
+.js-carousel-pagination {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0 2px;
+}
+
+.js-carousel-bullet {
+  padding: 8px;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  width: 28px;
+  border-right: 1px solid #fff;
+  transition: width 0.6s;
+  height: 40px;
+  color: #fff;
+}
+.js-carousel-bullet.is-active {
+  width: 120px;
+  color: #fff;
+}
+.js-carousel-bullet:first-child {
+  border-left: 1px solid #fff;
+}
+
+@media screen and (max-width: 768px) {
+  .js-carousel-wrap {
+    transition-duration: 0.3s;
+  }
+  .js-carousel-slide {
+    display: block;
+    max-width: 312px;
+    width: 100%;
+    aspect-ratio: 3/4;
+    border-radius: 24px;
+    margin-right: 20px;
+    font-size: 20px;
+  }
+  .js-carousel-navigation {
+    width: 340px;
+  }
+  .js-carousel-arrow {
+    width: 30px;
+    height: 30px;
   }
 }
 .cursor {
@@ -437,116 +592,118 @@ p, span, ul, li, strong, div, a, button {
     transition: transform 0.5s;
   }
 }
-.component-carousel {
+.component-overview {
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
   touch-action: pan-y;
 }
-.component-carousel__wrap {
+.component-overview__container {
   position: relative;
-  display: flex;
-  transition: ease-out;
-  transition-duration: 0.6s;
-  touch-action: pan-y;
+  width: 1000px;
 }
-.component-carousel__container {
-  position: relative;
-  width: 800px;
+@media screen and (min-width: 1920px) {
+  .component-overview__container {
+    width: 1200px;
+  }
+}
+.component-overview__container {
   margin: 0 auto;
 }
-.component-carousel__slide {
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  flex: 0 0 auto;
-  width: 800px;
-  min-height: 600px;
-  background-color: lightgrey;
-  border-radius: 30px;
-  margin-right: 20px;
-}
-.component-carousel__slide:last-child {
-  margin-right: 0;
-}
-.component-carousel__slide-title {
+.component-overview__slide-title {
+  position: absolute;
+  bottom: 100%;
   font-size: 40px;
   line-height: 1.5;
 }
-.component-carousel__navigation {
-  position: absolute;
-  display: flex;
-  justify-content: space-between;
-  top: 50%;
-  left: 50%;
-  height: 0;
-  width: 920px;
-  transform: translate(-50%, -50%);
-}
-.component-carousel__arrow {
-  width: 50px;
-  height: 50px;
-}
-.component-carousel__arrow:disabled {
-  pointer-events: none;
-  opacity: 0.3;
-}
-.component-carousel__arrow::after {
-  content: "";
+.component-overview__slide-headline {
+  position: relative;
+  z-index: 10;
+  width: 1000px;
   display: block;
-  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+.component-overview__slide-headline-num {
+  position: relative;
+  bottom: -80px;
+  line-height: 1;
+  font-size: 230px;
+  color: #fff !important;
+  font-family: "Fjalla One", sans-serif;
+}
+.component-overview__slide-headline-title {
+  color: #fff !important;
+  top: 100px;
+  left: 20px;
+  font-size: 32px;
+}
+.component-overview__slide-content {
+  position: relative;
+  display: grid;
   height: 100%;
 }
-.component-carousel__arrow--prev {
-  transform: scale(-1) translateY(50%);
-}
-.component-carousel__arrow--next {
-  transform: scale(1) translateY(-50%);
-}
-.component-carousel__pagination {
+.component-overview__slide-image--main, .component-overview__slide-image--bg {
   display: flex;
-  justify-content: center;
-  margin: 30px 0 2px;
+  grid-column: 1;
+  grid-row: 1;
+  border-radius: 20px;
+  overflow: hidden;
 }
-.component-carousel__bullet {
-  padding: 8px;
+.component-overview__slide-image--main {
+  z-index: 1;
+  flex-direction: column;
 }
-.component-carousel__bullet.is-active::after {
-  background-color: #000;
+.component-overview__slide-image--active {
+  position: absolute;
+  bottom: 0;
+  transform: scale(0);
+  transition: bottom 0.6s, transform 0.6s;
 }
-.component-carousel__bullet::after {
-  content: "";
-  display: block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  border: 1px solid #000;
-  box-sizing: border-box;
+.is-active .component-overview__slide-image--active {
+  bottom: 40%;
+  transform: scale(1);
+}
+.component-overview__slide-text {
+  width: 60%;
+  height: auto;
+  margin: auto;
+  padding: 20px 12px;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border-radius: 30px;
+  box-shadow: 2px 2px 10px rgba(51, 51, 51, 0.4705882353);
+  overflow: hidden;
 }
 
 @media screen and (max-width: 768px) {
-  .component-carousel__wrap {
+  .component-overview__wrap {
     transition-duration: 0.3s;
   }
-  .component-carousel__container {
+  .component-overview__container {
     width: 312px;
   }
-  .component-carousel__slide {
+  .component-overview__slide {
     display: block;
-    min-height: 400px;
     max-width: 312px;
     width: 100%;
-    height: auto;
+    aspect-ratio: 3/4;
     border-radius: 24px;
-    margin-right: 12px;
+    margin-right: 20px;
     font-size: 20px;
   }
-  .component-carousel__slide-content {
+  .component-overview__slide-content {
     position: relative;
   }
-  .component-carousel__navigation {
+  .component-overview__slide-text {
+    width: 80%;
+    min-height: 50%;
+    padding: 12px;
+    border-radius: 20px;
+  }
+  .component-overview__navigation {
     width: 340px;
   }
-  .component-carousel__arrow {
+  .component-overview__arrow {
     width: 30px;
     height: 30px;
   }
