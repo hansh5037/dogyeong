@@ -22,6 +22,7 @@ window.component.commonCarousel = (function () {
 
 				if (els.section) {
 					setElements();
+					setProperty();
 					bindEvents();
 
 					if (typeof options.onInit === 'function') {
@@ -38,6 +39,12 @@ window.component.commonCarousel = (function () {
 				els.carouselPrevArrow = els.section.querySelector('.js-carousel-prev');
 				els.carouselPagination = els.section.querySelector('.js-carousel-pagination');
 				els.carouselPaginationBullet = null;
+			};
+			
+			const setProperty = function () {
+				els.lastIndex = els.carouselSlides.length - 1;
+                els.slideRect = els.carouselSlides[activeIndex].getBoundingClientRect();
+                els.slideWidth = els.slideRect.width;
 			};
 
 			const bindEvents = function () {
@@ -137,7 +144,6 @@ window.component.commonCarousel = (function () {
 				onArrowClick: function (event) {
 					const isNext = event.target === els.carouselNextArrow;
 					const isPrev = event.target === els.carouselPrevArrow;
-					const lastIndex = els.carouselSlides.length - 1;
 
 					let nextIndex = activeIndex;
 					if (isNext) {
@@ -146,17 +152,15 @@ window.component.commonCarousel = (function () {
 						nextIndex -= 1;
 					}
 
-					if (nextIndex < 0 || nextIndex > lastIndex) return;
+					if (nextIndex < 0 || nextIndex > els.lastIndex) return;
 					activeIndex = nextIndex;
 
 					carouselEventList.slideChange();
 				},
 				onBulletClick: function (event) {
 					const clickedBullet = event.target.closest('.js-carousel-bullet');
-					const clickBulletIndex = Array.prototype.indexOf.call(
-						els.carouselPaginationBullet,
-						clickedBullet
-					);
+					const clickBulletIndex = [...els.carouselPaginationBullet].indexOf(clickedBullet);
+					
 					if (!clickedBullet || clickBulletIndex < 0) return;
 					activeIndex = clickBulletIndex;
 
@@ -188,13 +192,11 @@ window.component.commonCarousel = (function () {
 
 					const microSwipPx = 40;
 					const microSlideRatio = 0.2;
-                    const slideWidth = els.carouselSlides[activeIndex].getBoundingClientRect().width;
-					const threshold = Math.max(microSwipPx, slideWidth * microSlideRatio);
+					const threshold = Math.max(microSwipPx, els.slideWidth * microSlideRatio);
 
 					if (Math.abs(drag.deltaX) >= threshold) {
-						const last = els.carouselSlides.length - 1;
 						let next = activeIndex + (drag.deltaX < 0 ? 1 : -1);
-						next = Math.max(0, Math.min(last, next));
+						next = Math.max(0, Math.min(els.lastIndex, next));
 						if (next !== activeIndex) {
 							activeIndex = next;
 							carouselEventList.slideChange();
@@ -209,7 +211,7 @@ window.component.commonCarousel = (function () {
 			const accessibility = {
 				updateDisabledArrow: function () {
 					const activeFirstSlide = 0 === activeIndex;
-					const activeLastSlide = els.carouselSlides.length - 1 === activeIndex;
+					const activeLastSlide = els.lastIndex === activeIndex;
 
 					els.carouselPrevArrow.setAttribute('aria-disabled', activeFirstSlide ? 'true' : 'false');
 					els.carouselNextArrow.setAttribute('aria-disabled', activeLastSlide ? 'true' : 'false');
