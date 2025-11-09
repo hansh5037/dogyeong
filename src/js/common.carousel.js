@@ -170,11 +170,10 @@ window.component.commonCarousel = (function () {
 			
 			const dragEventList = {
 				dragStart: function (event) {
-					if (!event.isPrimary) return;
 					drag.isDown = true;
 					drag.startX = event.clientX;
 					drag.startPosition = carouselEventList.moveToTransform();
-
+					
 					event.preventDefault();
 				},
 				dragMove: function (event) {
@@ -190,19 +189,19 @@ window.component.commonCarousel = (function () {
 					if (!drag.isDown) return;
 					drag.isDown = false;
 
-					const microSwipPx = 40;
-					const microSlideRatio = 0.2;
-					const threshold = Math.max(microSwipPx, els.slideWidth * microSlideRatio);
+					const microSlideRatio = 30 / 100;
+					const threshold = els.slideWidth * microSlideRatio;
 
 					if (Math.abs(drag.deltaX) >= threshold) {
 						let next = activeIndex + (drag.deltaX < 0 ? 1 : -1);
-						next = Math.max(0, Math.min(els.lastIndex, next));
-						if (next !== activeIndex) {
-							activeIndex = next;
-							carouselEventList.slideChange();
-						};
-					};
 
+						if (next <= els.lastIndex && next >= 0) {
+							if (next !== activeIndex) {
+								activeIndex = next;
+							};
+							carouselEventList.slideChange();
+						}
+					}
 					carouselEventList.moveToTransform();
 					drag.deltaX = 0;
 				}
