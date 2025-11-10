@@ -1,20 +1,23 @@
-$slide-width-large: 1200px;
-$slide-width: 1000px;
-$slide-height: 720px;
-
 .component-overview {
 	position: relative;
 	overflow-x: hidden;
 	touch-action: pan-y;
 	&__container {
 		position: relative;
-        width: $slide-width;
+        width: var(--slide-width);
 		@media screen and (min-width: 1920px) {
-			width: $slide-width-large;
+			width: var(--slide-width-large);
 		}		
 		margin: 0 auto;
 	}
 	&__slide {
+        width: var(--slide-width);
+        border-radius: 20px;
+		@media screen and (min-width: 1920px) {
+			width: var(--slide-width-large);
+		}
+        aspect-ratio: 3 / 2;
+		margin-right: 60px; 
 		&-title {
 			position: absolute;
     		bottom: 100%;
@@ -23,8 +26,8 @@ $slide-height: 720px;
 		}
 		&-headline {
 			position: relative;
-			z-index: 10;
-			width: $slide-width;
+			z-index: 1;
+			width: var(--slide-width);
 			display: block;
 			margin-right: auto;
 			margin-left: auto;
@@ -84,27 +87,59 @@ $slide-height: 720px;
 			overflow: hidden;
 		}
 	}
+	&__navigation {
+        width: calc(var(--slide-width) + 60px);
+		@media screen and (min-width: 1920px) {
+			width: calc(var(--slide-width-large) + 60px);
+		}
+	}
+	&__arrow {
+		width: 50px;
+		height: 50px;
+		border: 1px solid var(--black);
+	}
+	.js-carousel-bullet {
+		width: 28px;
+		height: 40px;
+		background: transparent;
+		border-right: 1px solid #fff;
+		transition: width .6s;
+		&.is-active {
+			width: 120px;
+		}
+		&:first-child {
+			border-left: 1px solid #fff;
+		}
+	}
 }
 
 @media screen and (max-width: 768px) {
 	.component-overview {
-		&__wrap {
-			transition-duration: .3s;
-		}
 		&__container {
-            width: 312px;
+            width: var(--mo-wrap);
 		}
 		&__slide {
-			display: block;
-            max-width: 312px;
-			width: 100%;
 			aspect-ratio: 3/4;
             border-radius: 24px;
+			aspect-ratio: 3/4;
             margin-right: 20px;
 			font-size: 20px;
+			&-headline {
+				display: flex;
+				flex-direction: column;
+				max-width: 300px;
+				margin: auto;
+				&-num {
+					bottom: 0;
+					font-size: 70px;
+				}
+				&-title {
+					font-size: 14px;
+					line-height: 1.6;
+				}
+			}
 			&-content {
 				position: relative;
-				// @include mo-img-size(312, 334);
 			}
 			&-text {
 				width: 80%;

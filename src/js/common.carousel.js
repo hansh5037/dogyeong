@@ -1,260 +1,257 @@
 window.component = window.component || {};
-window.component.commonCarousel = (function () {
-	const CAROUSEL = {
-		create: function (opts = {}) {
-			let els = {},
-				activeIndex = 0,
-				drag = {
-					isDown: false,
-					startX: 0,
-					deltaX: 0,
-					startPosition: 0
-				};
+window.component.commonCarousel = window.component.commonCarousel || {};
+window.component.commonCarousel.create = function (opts = {}) {
+		
+	let els = {},
+		activeIndex = 0,
+		drag = {
+			isDown: false,
+			startX: 0,
+			deltaX: 0,
+			startPosition: 0
+		};
 
-			const options = {
-				container: opts.container ?? null,
-				onInit: opts.onInit ?? null,
-				onSlideChange: opts.onSlideChange ?? null
+	const options = {
+		container: opts.container ?? null,
+		onInit: opts.onInit ?? null,
+		onSlideChange: opts.onSlideChange ?? null
+	};
+
+	const init = function () {
+		els.section = options.container;
+
+		if (els.section) {
+			setElements();
+			setProperty();
+			bindEvents();
+
+			if (typeof options.onInit === 'function') {
+				options.onInit();
+			}
+		}
+	};
+
+	const setElements = function () {
+		els.carouselWrap = els.section.querySelector('.js-carousel-wrap');
+		els.carouselSlides = els.section.querySelectorAll('.js-carousel-slide');
+		els.carouselNavigation = els.section.querySelector('.js-carousel-navigation');
+		els.carouselNextArrow = els.section.querySelector('.js-carousel-next');
+		els.carouselPrevArrow = els.section.querySelector('.js-carousel-prev');
+		els.carouselPagination = els.section.querySelector('.js-carousel-pagination');
+		els.carouselPaginationBullet = null;
+	};
+	
+	const setProperty = function () {
+		els.lastIndex = els.carouselSlides.length - 1;
+		els.slideRect = els.carouselSlides[activeIndex].getBoundingClientRect();
+		els.slideWidth = els.slideRect.width;
+	};
+
+	const bindEvents = function () {
+		if (els.carouselPagination) {
+			carouselEventList.setPagination();
+		}
+		carouselEventList.slideChange();
+		eventHandler.on();
+	};
+
+	const eventHandler = {
+		on: function () {
+			// click
+			if (els.carouselNextArrow) {
+				els.carouselNextArrow.addEventListener('click', clickEventList.onArrowClick);
+			}
+			if (els.carouselPrevArrow) {
+				els.carouselPrevArrow.addEventListener('click', clickEventList.onArrowClick);
+			}
+			if (els.carouselPagination) {
+				els.carouselPagination.addEventListener('click', clickEventList.onBulletClick);
+			}
+
+			// drag 
+			els.carouselWrap.addEventListener('pointerdown', dragEventList.dragStart, {passive: false});
+			window.addEventListener('pointermove', dragEventList.dragMove);
+			window.addEventListener('pointerup', dragEventList.dragEnd);
+			window.addEventListener('pointercancel', dragEventList.dragEnd);
+		},
+		off: function () {
+			// click
+			if (els.carouselNextArrow) {
+				els.carouselNextArrow.removeEventListener('click', clickEventList.onArrowClick);
+			}
+			if (els.carouselPrevArrow) {
+				els.carouselPrevArrow.removeEventListener('click', clickEventList.onArrowClick);
+			}
+			if (els.carouselPagination) {
+				els.carouselPagination.removeEventListener('click', clickEventList.onBulletClick);
+			}
+
+			// drag
+			els.carouselWrap.removeEventListener('pointerdown', dragEventList.dragStart);
+			window.removeEventListener('pointermove', dragEventList.dragMove);
+			window.removeEventListener('pointerup', dragEventList.dragEnd);
+			window.removeEventListener('pointercancel', dragEventList.dragEnd);
+		}
+	};
+
+	const carouselEventList = {
+		setPagination: function () {
+			for (let i = 0; i < els.carouselSlides.length; i++) {
+				const bulletButtonWrap = document.createElement('li');
+				const bulletButton = document.createElement('button');
+				bulletButton.type = 'button';
+				bulletButton.className = `js-carousel-bullet${i === 0 ? ' is-active' : ''}`;
+				bulletButton.setAttribute('aria-label', i+1 +'/'+els.carouselSlides.length);
+				
+				els.carouselPagination.append(bulletButtonWrap);
+				bulletButtonWrap.append(bulletButton);
+			}
+			els.carouselPaginationBullet = els.carouselPagination.querySelectorAll('.js-carousel-bullet');
+		},
+		moveToTransform: function () {
+			let wrapperRect = els.carouselWrap.getBoundingClientRect().left;
+			let activeSlideRect = els.carouselSlides[activeIndex].getBoundingClientRect().left;
+			let rect = activeSlideRect - wrapperRect;
+
+			els.carouselWrap.style.transform = `translateX(-${rect}px)`;
+			return rect;
+		},
+		toggleActiveClass: function (list) {
+			for (let i = 0; i < list.length; i++) {
+				list[i].classList.toggle('is-active', i === activeIndex);
 			};
+		},
+		slideChange: function () {
+			if (els.carouselPagination) {
+				carouselEventList.toggleActiveClass(els.carouselPaginationBullet);
+				accessibility.activeCurrentBullet();
+			}
+			if (els.carouselNavigation) {
+				accessibility.updateDisabledArrow();
+			}
 
-			const init = function () {
-				els.section = options.container;
+			carouselEventList.toggleActiveClass(els.carouselSlides);
+			carouselEventList.moveToTransform();
+			accessibility.activeSlideAcc();
 
-				if (els.section) {
-					setElements();
-					setProperty();
-					bindEvents();
+			if (typeof options.onSlideChange === 'function') {
+				options.onSlideChange(activeIndex);
+			}
+		}
+	};
+	
+	const clickEventList = {
+		onArrowClick: function (event) {
+			const isNext = event.currentTarget === els.carouselNextArrow;
+			const isPrev = event.currentTarget === els.carouselPrevArrow;
 
-					if (typeof options.onInit === 'function') {
-						options.onInit();
-					}
-				}
-			};
+			let nextIndex = activeIndex;
+			if (isNext) {
+				nextIndex += 1;
+			} else if (isPrev) {
+				nextIndex -= 1;
+			}
 
-			const setElements = function () {
-				els.carouselWrap = els.section.querySelector('.js-carousel-wrap');
-				els.carouselSlides = els.section.querySelectorAll('.js-carousel-slide');
-				els.carouselNavigation = els.section.querySelector('.js-carousel-navigation');
-				els.carouselNextArrow = els.section.querySelector('.js-carousel-next');
-				els.carouselPrevArrow = els.section.querySelector('.js-carousel-prev');
-				els.carouselPagination = els.section.querySelector('.js-carousel-pagination');
-				els.carouselPaginationBullet = null;
-			};
+			if (nextIndex < 0 || nextIndex > els.lastIndex) return;
+			activeIndex = nextIndex;
+
+			carouselEventList.slideChange();
+		},
+		onBulletClick: function (event) {
+			const clickedBullet = event.target.closest('.js-carousel-bullet');
+			const clickBulletIndex = [...els.carouselPaginationBullet].indexOf(clickedBullet);
 			
-			const setProperty = function () {
-				els.lastIndex = els.carouselSlides.length - 1;
-                els.slideRect = els.carouselSlides[activeIndex].getBoundingClientRect();
-                els.slideWidth = els.slideRect.width;
-			};
+			if (!clickedBullet || clickBulletIndex < 0) return;
+			activeIndex = clickBulletIndex;
 
-			const bindEvents = function () {
-				if (els.carouselPagination) {
-					carouselEventList.setPagination();
-				}
-				carouselEventList.slideChange();
-				eventHandler.on();
-			};
+			carouselEventList.slideChange();
+		}				
+	};
+	
+	const dragEventList = {
+		dragStart: function (event) {
+			drag.isDown = true;
+			drag.startX = event.clientX;
+			drag.startPosition = carouselEventList.moveToTransform();
+			
+			event.preventDefault();
+		},
+		dragMove: function (event) {
+			if (!drag.isDown) return;
+			const dragX = event.clientX - drag.startX;
 
-			const eventHandler = {
-				on: function () {
-					// click
-					if (els.carouselNextArrow) {
-						els.carouselNextArrow.addEventListener('click', clickEventList.onArrowClick);
-					}
-					if (els.carouselPrevArrow) {
-						els.carouselPrevArrow.addEventListener('click', clickEventList.onArrowClick);
-					}
-					if (els.carouselPagination) {
-						els.carouselPagination.addEventListener('click', clickEventList.onBulletClick);
-					}
+			drag.deltaX = dragX;
 
-					// drag 
-                    els.carouselWrap.addEventListener('pointerdown', dragEventList.dragStart, {passive: false});
-					window.addEventListener('pointermove', dragEventList.dragMove);
-					window.addEventListener('pointerup', dragEventList.dragEnd);
-					window.addEventListener('pointercancel', dragEventList.dragEnd);
-				},
-				off: function () {
-					// click
-					if (els.carouselNextArrow) {
-						els.carouselNextArrow.removeEventListener('click', clickEventList.onArrowClick);
-					}
-					if (els.carouselPrevArrow) {
-						els.carouselPrevArrow.removeEventListener('click', clickEventList.onArrowClick);
-					}
-					if (els.carouselPagination) {
-						els.carouselPagination.removeEventListener('click', clickEventList.onBulletClick);
-					}
+			const currentOffset = drag.startPosition - dragX;
+			els.carouselWrap.style.transform = `translateX(-${currentOffset}px)`;
+		},
+		dragEnd: function () {
+			if (!drag.isDown) return;
+			drag.isDown = false;
 
-					// drag
-                    els.carouselWrap.removeEventListener('pointerdown', dragEventList.dragStart);
-					window.removeEventListener('pointermove', dragEventList.dragMove);
-					window.removeEventListener('pointerup', dragEventList.dragEnd);
-					window.removeEventListener('pointercancel', dragEventList.dragEnd);
-				}
-			};
+			const microSlideRatio = 30 / 100;
+			const threshold = els.slideWidth * microSlideRatio;
 
-			const carouselEventList = {
-				setPagination: function () {
-					for (let i = 0; i < els.carouselSlides.length; i++) {
-						const bulletButtonWrap = document.createElement('li');
-						const bulletButton = document.createElement('button');
-						bulletButton.type = 'button';
-						bulletButton.className = `js-carousel-bullet${i === 0 ? ' is-active' : ''}`;
-						bulletButton.setAttribute('aria-label', i+1 +'/'+els.carouselSlides.length);
-						
-						els.carouselPagination.append(bulletButtonWrap);
-						bulletButtonWrap.append(bulletButton);
-					}
-					els.carouselPaginationBullet = els.carouselPagination.querySelectorAll('.js-carousel-bullet');
-				},
-				moveToTransform: function () {
-					let wrapperRect = els.carouselWrap.getBoundingClientRect().left;
-					let activeSlideRect = els.carouselSlides[activeIndex].getBoundingClientRect().left;
-					let rect = activeSlideRect - wrapperRect;
+			if (Math.abs(drag.deltaX) >= threshold) {
+				let next = activeIndex + (drag.deltaX < 0 ? 1 : -1);
 
-					els.carouselWrap.style.transform = `translateX(-${rect}px)`;
-					return rect;
-				},
-				toggleActiveClass: function (list) {
-					for (let i = 0; i < list.length; i++) {
-						list[i].classList.toggle('is-active', i === activeIndex);
+				if (next <= els.lastIndex && next >= 0) {
+					if (next !== activeIndex) {
+						activeIndex = next;
 					};
-				},
-				slideChange: function () {
-					if (els.carouselPagination) {
-						carouselEventList.toggleActiveClass(els.carouselPaginationBullet);
-						accessibility.activeCurrentBullet();
-					}
-					if (els.carouselNavigation) {
-						accessibility.updateDisabledArrow();
-					}
-
-					carouselEventList.toggleActiveClass(els.carouselSlides);
-					carouselEventList.moveToTransform();
-					accessibility.activeSlideAcc();
-
-					if (typeof options.onSlideChange === 'function') {
-						options.onSlideChange(activeIndex);
-					}
-				}
-			};
-			
-			const clickEventList = {
-				onArrowClick: function (event) {
-					const isNext = event.target === els.carouselNextArrow;
-					const isPrev = event.target === els.carouselPrevArrow;
-
-					let nextIndex = activeIndex;
-					if (isNext) {
-						nextIndex += 1;
-					} else if (isPrev) {
-						nextIndex -= 1;
-					}
-
-					if (nextIndex < 0 || nextIndex > els.lastIndex) return;
-					activeIndex = nextIndex;
-
 					carouselEventList.slideChange();
-				},
-				onBulletClick: function (event) {
-					const clickedBullet = event.target.closest('.js-carousel-bullet');
-					const clickBulletIndex = [...els.carouselPaginationBullet].indexOf(clickedBullet);
-					
-					if (!clickedBullet || clickBulletIndex < 0) return;
-					activeIndex = clickBulletIndex;
-
-					carouselEventList.slideChange();
-				}				
-			};
-			
-			const dragEventList = {
-				dragStart: function (event) {
-					drag.isDown = true;
-					drag.startX = event.clientX;
-					drag.startPosition = carouselEventList.moveToTransform();
-					
-					event.preventDefault();
-				},
-				dragMove: function (event) {
-					if (!drag.isDown) return;
-					const dragX = event.clientX - drag.startX;
-
-					drag.deltaX = dragX;
-
-					const currentOffset = drag.startPosition - dragX;
-					els.carouselWrap.style.transform = `translateX(-${currentOffset}px)`;
-				},
-				dragEnd: function () {
-					if (!drag.isDown) return;
-					drag.isDown = false;
-
-					const microSlideRatio = 30 / 100;
-					const threshold = els.slideWidth * microSlideRatio;
-
-					if (Math.abs(drag.deltaX) >= threshold) {
-						let next = activeIndex + (drag.deltaX < 0 ? 1 : -1);
-
-						if (next <= els.lastIndex && next >= 0) {
-							if (next !== activeIndex) {
-								activeIndex = next;
-							};
-							carouselEventList.slideChange();
-						}
-					}
-					carouselEventList.moveToTransform();
-					drag.deltaX = 0;
 				}
+			}
+			carouselEventList.moveToTransform();
+			drag.deltaX = 0;
+		}
+	};
+
+	const accessibility = {
+		updateDisabledArrow: function () {
+			const activeFirstSlide = 0 === activeIndex;
+			const activeLastSlide = els.lastIndex === activeIndex;
+
+			els.carouselPrevArrow.setAttribute('aria-disabled', activeFirstSlide ? 'true' : 'false');
+			els.carouselNextArrow.setAttribute('aria-disabled', activeLastSlide ? 'true' : 'false');
+		},
+		activeCurrentBullet: function () {
+			for (let i = 0; i < els.carouselPaginationBullet.length; i++) {
+				els.carouselPaginationBullet[i].setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
 			};
-
-			const accessibility = {
-				updateDisabledArrow: function () {
-					const activeFirstSlide = 0 === activeIndex;
-					const activeLastSlide = els.lastIndex === activeIndex;
-
-					els.carouselPrevArrow.setAttribute('aria-disabled', activeFirstSlide ? 'true' : 'false');
-					els.carouselNextArrow.setAttribute('aria-disabled', activeLastSlide ? 'true' : 'false');
-				},
-				activeCurrentBullet: function () {
-					for (let i = 0; i < els.carouselPaginationBullet.length; i++) {
-						els.carouselPaginationBullet[i].setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
-					};
-				},
-				activeSlideAcc: function () {
-					for (let i = 0; i < els.carouselSlides.length; i++) {
-						els.carouselSlides[i].setAttribute('aria-hidden', i === activeIndex ? 'false' : 'true');
-						els.carouselSlides[i].setAttribute('tabindex', i === activeIndex ? '0' : '-1');
-					};
-				}
-			};
-
-			const destroy = function () {
-				eventHandler.off();
-				els.carouselWrap.style.transform = '';
-				for (let i = 0; i < els.carouselSlides.length; i++) {
-					els.carouselSlides[i].classList.remove('is-active');
-				};
-				if (els.carouselPagination) {
-					for (let i = 0; i < els.carouselPaginationBullet.length; i++) {
-						els.carouselPaginationBullet[i].classList.remove('is-active');
-					}
-				};
-				if (els.carouselNavigation) {
-					els.carouselNextArrow.removeAttribute('aria-disabled');
-					els.carouselPrevArrow.removeAttribute('aria-disabled');
-				};
-				if (els.carouselPagination) els.carouselPagination.innerHTML = '';
-				activeIndex = 0;
-				els.carouselPaginationBullet = null;
-				drag.isDown = false;
-				drag.deltaX = 0;
-			};
-
-			return {
-				init: init,
-				destroy: destroy
+		},
+		activeSlideAcc: function () {
+			for (let i = 0; i < els.carouselSlides.length; i++) {
+				els.carouselSlides[i].setAttribute('aria-hidden', i === activeIndex ? 'false' : 'true');
+				els.carouselSlides[i].setAttribute('tabindex', i === activeIndex ? '0' : '-1');
 			};
 		}
-	}
-	return CAROUSEL;
-})();
+	};
+
+	const destroy = function () {
+		eventHandler.off();
+		els.carouselWrap.style.transform = '';
+		for (let i = 0; i < els.carouselSlides.length; i++) {
+			els.carouselSlides[i].classList.remove('is-active');
+		};
+		if (els.carouselPagination) {
+			for (let i = 0; i < els.carouselPaginationBullet.length; i++) {
+				els.carouselPaginationBullet[i].classList.remove('is-active');
+			}
+		};
+		if (els.carouselNavigation) {
+			els.carouselNextArrow.removeAttribute('aria-disabled');
+			els.carouselPrevArrow.removeAttribute('aria-disabled');
+		};
+		if (els.carouselPagination) els.carouselPagination.innerHTML = '';
+		activeIndex = 0;
+		els.carouselPaginationBullet = null;
+		drag.isDown = false;
+		drag.deltaX = 0;
+	};
+
+	return {
+		init: init,
+		destroy: destroy
+	};
+};	

@@ -2,7 +2,7 @@
 	position: sticky;
 	top: 0;
 	height: var(--gnb-height);
-	z-index: 1;
+	z-index: 10;
 	backdrop-filter: blur(3px);
 	border-bottom: 1px solid var(--black);
 	box-shadow: 1px 1px 0px 0 #c8c8c8;
