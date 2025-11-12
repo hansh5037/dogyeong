@@ -1,257 +1,257 @@
 window.component = window.component || {};
-window.component.commonCarousel = window.component.commonCarousel || {};
-window.component.commonCarousel.create = function (opts = {}) {
-		
-	let els = {},
-		activeIndex = 0,
-		drag = {
+window.component.commonCarousel = (function () {
+
+	function Carousel(opts = {}) {
+		this.els = {};
+		this.activeIndex = 0;
+		this.drag = {
 			isDown: false,
 			startX: 0,
 			deltaX: 0,
 			startPosition: 0
 		};
-
-	const options = {
-		container: opts.container ?? null,
-		onInit: opts.onInit ?? null,
-		onSlideChange: opts.onSlideChange ?? null
+		this.options = {
+			container: opts.container ?? null,
+			onInit: opts.onInit ?? null,
+			onSlideChange: opts.onSlideChange ?? null
+		};
 	};
 
-	const init = function () {
-		els.section = options.container;
+	const fn = Carousel.prototype;
 
-		if (els.section) {
-			setElements();
-			setProperty();
-			bindEvents();
+	fn.init = function () {
+		this.els.section = this.options.container;
 
-			if (typeof options.onInit === 'function') {
-				options.onInit();
-			}
+		if (!this.els.section) return;
+		this.setElements();
+		this.setProperty();
+		this.bindEvents();
+
+		if (typeof this.options.onInit === 'function') {
+			this.options.onInit();
 		}
 	};
 
-	const setElements = function () {
-		els.carouselWrap = els.section.querySelector('.js-carousel-wrap');
-		els.carouselSlides = els.section.querySelectorAll('.js-carousel-slide');
-		els.carouselNavigation = els.section.querySelector('.js-carousel-navigation');
-		els.carouselNextArrow = els.section.querySelector('.js-carousel-next');
-		els.carouselPrevArrow = els.section.querySelector('.js-carousel-prev');
-		els.carouselPagination = els.section.querySelector('.js-carousel-pagination');
-		els.carouselPaginationBullet = null;
-	};
-	
-	const setProperty = function () {
-		els.lastIndex = els.carouselSlides.length - 1;
-		els.slideRect = els.carouselSlides[activeIndex].getBoundingClientRect();
-		els.slideWidth = els.slideRect.width;
+	fn.setElements = function () {
+		this.els.carouselWrap = this.els.section.querySelector('.js-carousel-wrap');
+		this.els.carouselSlides = this.els.section.querySelectorAll('.js-carousel-slide');
+		this.els.carouselNavigation = this.els.section.querySelector('.js-carousel-navigation');
+		this.els.carouselNextArrow = this.els.section.querySelector('.js-carousel-next');
+		this.els.carouselPrevArrow = this.els.section.querySelector('.js-carousel-prev');
+		this.els.carouselPagination = this.els.section.querySelector('.js-carousel-pagination');
+		this.els.carouselPaginationBullet = null;
 	};
 
-	const bindEvents = function () {
-		if (els.carouselPagination) {
-			carouselEventList.setPagination();
+	fn.setProperty = function () {
+		this.els.lastIndex = this.els.carouselSlides.length - 1;
+		this.els.slideRect = this.els.carouselSlides[this.activeIndex].getBoundingClientRect();
+		this.els.slideWidth = this.els.slideRect.width;
+	};
+
+	fn.bindEvents = function () {
+		if (this.els.carouselPagination) {
+			this.carouselEventList.setPagination.call(this);
 		}
-		carouselEventList.slideChange();
-		eventHandler.on();
+		this.carouselEventList.slideChange.call(this);
+		this.eventHandler.on.call(this);
 	};
 
-	const eventHandler = {
+	fn.eventHandler = {
 		on: function () {
+			if (this.handler) return;
+			// bind
+			this.handler = {
+				arrowClick: this.clickEventList.onArrowClick.bind(this),
+				bulletClick: this.clickEventList.onBulletClick.bind(this),
+				dragStart: this.dragEventList.onDragStart.bind(this),
+				dragMove: this.dragEventList.onDragMove.bind(this),
+				dragEnd: this.dragEventList.onDragEnd.bind(this)
+			}
+		
 			// click
-			if (els.carouselNextArrow) {
-				els.carouselNextArrow.addEventListener('click', clickEventList.onArrowClick);
-			}
-			if (els.carouselPrevArrow) {
-				els.carouselPrevArrow.addEventListener('click', clickEventList.onArrowClick);
-			}
-			if (els.carouselPagination) {
-				els.carouselPagination.addEventListener('click', clickEventList.onBulletClick);
-			}
+			this.els.carouselNextArrow?.addEventListener('click', this.handler.arrowClick);
+			this.els.carouselPrevArrow?.addEventListener('click', this.handler.arrowClick);
+			this.els.carouselPagination?.addEventListener('click', this.handler.bulletClick);
 
 			// drag 
-			els.carouselWrap.addEventListener('pointerdown', dragEventList.dragStart, {passive: false});
-			window.addEventListener('pointermove', dragEventList.dragMove);
-			window.addEventListener('pointerup', dragEventList.dragEnd);
-			window.addEventListener('pointercancel', dragEventList.dragEnd);
+			this.els.carouselWrap.addEventListener('pointerdown', this.handler.dragStart), {passive:false};
+			window.addEventListener('pointermove', this.handler.dragMove);
+			window.addEventListener('pointerup', this.handler.dragEnd);
+			window.addEventListener('pointercancel', this.handler.dragEnd);
 		},
 		off: function () {
+			if (!this.handler) return;
 			// click
-			if (els.carouselNextArrow) {
-				els.carouselNextArrow.removeEventListener('click', clickEventList.onArrowClick);
-			}
-			if (els.carouselPrevArrow) {
-				els.carouselPrevArrow.removeEventListener('click', clickEventList.onArrowClick);
-			}
-			if (els.carouselPagination) {
-				els.carouselPagination.removeEventListener('click', clickEventList.onBulletClick);
-			}
+			this.els.carouselNextArrow?.removeEventListener('click', this.handler.arrowClick);
+			this.els.carouselPrevArrow?.removeEventListener('click', this.handler.arrowClick);
+			this.els.carouselPagination?.removeEventListener('click', this.handler.bulletClick);
 
 			// drag
-			els.carouselWrap.removeEventListener('pointerdown', dragEventList.dragStart);
-			window.removeEventListener('pointermove', dragEventList.dragMove);
-			window.removeEventListener('pointerup', dragEventList.dragEnd);
-			window.removeEventListener('pointercancel', dragEventList.dragEnd);
+			this.els.carouselWrap.removeEventListener('pointerdown', this.handler.dragStart);
+			window.removeEventListener('pointermove', this.handler.dragMove);
+			window.removeEventListener('pointerup', this.handler.dragEnd);
+			window.removeEventListener('pointercancel', this.handler.dragEnd);
+
+			this.handler=null
 		}
 	};
 
-	const carouselEventList = {
+	fn.carouselEventList = {
 		setPagination: function () {
-			for (let i = 0; i < els.carouselSlides.length; i++) {
+			for (let i = 0; i < this.els.carouselSlides.length; i++) {
 				const bulletButtonWrap = document.createElement('li');
 				const bulletButton = document.createElement('button');
 				bulletButton.type = 'button';
 				bulletButton.className = `js-carousel-bullet${i === 0 ? ' is-active' : ''}`;
-				bulletButton.setAttribute('aria-label', i+1 +'/'+els.carouselSlides.length);
-				
-				els.carouselPagination.append(bulletButtonWrap);
+				bulletButton.setAttribute('aria-label', i+1 +'/'+this.els.carouselSlides.length);
+
+				this.els.carouselPagination.append(bulletButtonWrap);
 				bulletButtonWrap.append(bulletButton);
 			}
-			els.carouselPaginationBullet = els.carouselPagination.querySelectorAll('.js-carousel-bullet');
+			this.els.carouselPaginationBullet = this.els.carouselPagination.querySelectorAll('.js-carousel-bullet');
 		},
 		moveToTransform: function () {
-			let wrapperRect = els.carouselWrap.getBoundingClientRect().left;
-			let activeSlideRect = els.carouselSlides[activeIndex].getBoundingClientRect().left;
+			let wrapperRect = this.els.carouselWrap.getBoundingClientRect().left;
+			let activeSlideRect = this.els.carouselSlides[this.activeIndex].getBoundingClientRect().left;
 			let rect = activeSlideRect - wrapperRect;
 
-			els.carouselWrap.style.transform = `translateX(-${rect}px)`;
+			this.els.carouselWrap.style.transform = `translateX(-${rect}px)`;
 			return rect;
 		},
 		toggleActiveClass: function (list) {
 			for (let i = 0; i < list.length; i++) {
-				list[i].classList.toggle('is-active', i === activeIndex);
+				list[i].classList.toggle('is-active', i === this.activeIndex);
 			};
 		},
 		slideChange: function () {
-			if (els.carouselPagination) {
-				carouselEventList.toggleActiveClass(els.carouselPaginationBullet);
-				accessibility.activeCurrentBullet();
+		
+			if (this.els.carouselPagination) {
+				this.carouselEventList.toggleActiveClass.call(this, this.els.carouselPaginationBullet);
+				this.accessibility.activeCurrentBullet.call(this);
 			}
-			if (els.carouselNavigation) {
-				accessibility.updateDisabledArrow();
+			if (this.els.carouselNavigation) {
+				this.accessibility.updateDisabledArrow.call(this);
 			}
 
-			carouselEventList.toggleActiveClass(els.carouselSlides);
-			carouselEventList.moveToTransform();
-			accessibility.activeSlideAcc();
+			this.carouselEventList.toggleActiveClass.call(this, this.els.carouselSlides);
+			this.carouselEventList.moveToTransform.call(this);
+			this.accessibility.activeSlideAcc.call(this);
 
-			if (typeof options.onSlideChange === 'function') {
-				options.onSlideChange(activeIndex);
+			if (typeof this.options.onSlideChange === 'function') {
+				this.options.onSlideChange(this.activeIndex);
 			}
 		}
 	};
-	
-	const clickEventList = {
-		onArrowClick: function (event) {
-			const isNext = event.currentTarget === els.carouselNextArrow;
-			const isPrev = event.currentTarget === els.carouselPrevArrow;
 
-			let nextIndex = activeIndex;
+	fn.clickEventList = {
+		onArrowClick: function (event) {
+			const isNext = event.currentTarget === this.els.carouselNextArrow;
+			const isPrev = event.currentTarget === this.els.carouselPrevArrow;
+
+			let nextIndex = this.activeIndex;
 			if (isNext) {
 				nextIndex += 1;
 			} else if (isPrev) {
 				nextIndex -= 1;
 			}
 
-			if (nextIndex < 0 || nextIndex > els.lastIndex) return;
-			activeIndex = nextIndex;
+			if (nextIndex < 0 || nextIndex > this.els.lastIndex) return;
+			this.activeIndex = nextIndex;
 
-			carouselEventList.slideChange();
+			this.carouselEventList.slideChange.call(this);
 		},
 		onBulletClick: function (event) {
 			const clickedBullet = event.target.closest('.js-carousel-bullet');
-			const clickBulletIndex = [...els.carouselPaginationBullet].indexOf(clickedBullet);
-			
-			if (!clickedBullet || clickBulletIndex < 0) return;
-			activeIndex = clickBulletIndex;
+			const clickBulletIndex = [...this.els.carouselPaginationBullet].indexOf(clickedBullet);
 
-			carouselEventList.slideChange();
+			if (!clickedBullet || clickBulletIndex < 0) return;
+			this.activeIndex = clickBulletIndex;
+
+			this.carouselEventList.slideChange.call(this);
 		}				
 	};
-	
-	const dragEventList = {
-		dragStart: function (event) {
-			drag.isDown = true;
-			drag.startX = event.clientX;
-			drag.startPosition = carouselEventList.moveToTransform();
-			
+
+	fn.dragEventList = {
+		onDragStart: function (event) {
+			this.drag.isDown = true;
+			this.drag.startX = event.clientX;
+			this.drag.startPosition = this.carouselEventList.moveToTransform.call(this);
+
 			event.preventDefault();
 		},
-		dragMove: function (event) {
-			if (!drag.isDown) return;
-			const dragX = event.clientX - drag.startX;
+		onDragMove: function (event) {
+			if (!this.drag.isDown) return;
+			const dragX = event.clientX - this.drag.startX;
 
-			drag.deltaX = dragX;
+			this.drag.deltaX = dragX;
 
-			const currentOffset = drag.startPosition - dragX;
-			els.carouselWrap.style.transform = `translateX(-${currentOffset}px)`;
+			const currentOffset = this.drag.startPosition - dragX;
+			this.els.carouselWrap.style.transform = `translateX(-${currentOffset}px)`;
 		},
-		dragEnd: function () {
-			if (!drag.isDown) return;
-			drag.isDown = false;
+		onDragEnd: function () {
+			if (!this.drag.isDown) return;
+			this.drag.isDown = false;
 
 			const microSlideRatio = 30 / 100;
-			const threshold = els.slideWidth * microSlideRatio;
+			const threshold = this.els.slideWidth * microSlideRatio;
 
-			if (Math.abs(drag.deltaX) >= threshold) {
-				let next = activeIndex + (drag.deltaX < 0 ? 1 : -1);
+			if (Math.abs(this.drag.deltaX) >= threshold) {
+				let next = this.activeIndex + (this.drag.deltaX < 0 ? 1 : -1);
 
-				if (next <= els.lastIndex && next >= 0) {
-					if (next !== activeIndex) {
-						activeIndex = next;
+				if (next <= this.els.lastIndex && next >= 0) {
+					if (next !== this.activeIndex) {
+						this.activeIndex = next;
 					};
-					carouselEventList.slideChange();
+					this.carouselEventList.slideChange.call(this);
 				}
 			}
-			carouselEventList.moveToTransform();
-			drag.deltaX = 0;
+			this.carouselEventList.moveToTransform.call(this);
+			this.drag.deltaX = 0;
 		}
 	};
 
-	const accessibility = {
+	fn.accessibility = {
 		updateDisabledArrow: function () {
-			const activeFirstSlide = 0 === activeIndex;
-			const activeLastSlide = els.lastIndex === activeIndex;
-
-			els.carouselPrevArrow.setAttribute('aria-disabled', activeFirstSlide ? 'true' : 'false');
-			els.carouselNextArrow.setAttribute('aria-disabled', activeLastSlide ? 'true' : 'false');
+			const activeFirstSlide = 0 === this.activeIndex;
+			const activeLastSlide = this.els.lastIndex === this.activeIndex;
+			
+			this.els.carouselPrevArrow.setAttribute('aria-disabled', activeFirstSlide ? 'true' : 'false');
+			this.els.carouselNextArrow.setAttribute('aria-disabled', activeLastSlide ? 'true' : 'false');
 		},
 		activeCurrentBullet: function () {
-			for (let i = 0; i < els.carouselPaginationBullet.length; i++) {
-				els.carouselPaginationBullet[i].setAttribute('aria-selected', i === activeIndex ? 'true' : 'false');
+			for (let i = 0; i < this.els.carouselPaginationBullet.length; i++) {
+				this.els.carouselPaginationBullet[i].setAttribute('aria-selected', i === this.activeIndex ? 'true' : 'false');
 			};
 		},
 		activeSlideAcc: function () {
-			for (let i = 0; i < els.carouselSlides.length; i++) {
-				els.carouselSlides[i].setAttribute('aria-hidden', i === activeIndex ? 'false' : 'true');
-				els.carouselSlides[i].setAttribute('tabindex', i === activeIndex ? '0' : '-1');
+			for (let i = 0; i < this.els.carouselSlides.length; i++) {
+				this.els.carouselSlides[i].setAttribute('aria-hidden', i === this.activeIndex ? 'false' : 'true');
+				this.els.carouselSlides[i].setAttribute('tabindex', i === this.activeIndex ? '0' : '-1');
 			};
 		}
 	};
 
-	const destroy = function () {
-		eventHandler.off();
-		els.carouselWrap.style.transform = '';
-		for (let i = 0; i < els.carouselSlides.length; i++) {
-			els.carouselSlides[i].classList.remove('is-active');
+	fn.destroy = function () {
+		this.eventHandler.off.call(this)
+		this.els.carouselWrap.style.transform = '';
+		for (let i = 0; i < this.els.carouselSlides.length; i++) {
+			this.els.carouselSlides[i].classList.remove('is-active');
 		};
-		if (els.carouselPagination) {
-			for (let i = 0; i < els.carouselPaginationBullet.length; i++) {
-				els.carouselPaginationBullet[i].classList.remove('is-active');
+		if (this.els.carouselPagination) {
+			for (let i = 0; i < this.els.carouselPaginationBullet.length; i++) {
+				this.els.carouselPaginationBullet[i].classList.remove('is-active');
 			}
 		};
-		if (els.carouselNavigation) {
-			els.carouselNextArrow.removeAttribute('aria-disabled');
-			els.carouselPrevArrow.removeAttribute('aria-disabled');
+		if (this.els.carouselNavigation) {
+			this.els.carouselNextArrow.removeAttribute('aria-disabled');
+			this.els.carouselPrevArrow.removeAttribute('aria-disabled');
 		};
-		if (els.carouselPagination) els.carouselPagination.innerHTML = '';
-		activeIndex = 0;
-		els.carouselPaginationBullet = null;
-		drag.isDown = false;
-		drag.deltaX = 0;
+		if (this.els.carouselPagination) this.els.carouselPagination.innerHTML = '';
+		this.activeIndex = 0;
+		this.els.carouselPaginationBullet = null;
+		this.drag.isDown = false;
+		this.drag.deltaX = 0;
 	};
 
-	return {
-		init: init,
-		destroy: destroy
-	};
-};	
+	return Carousel;
+})();
