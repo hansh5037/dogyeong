@@ -4,7 +4,7 @@ window.component.overview = (function () {
 		CAROUSEL = window.component.commonCarousel;
 	
 	const init = function () {
-		els.section = document.querySelector('.common-wrap');
+		els.section = document.querySelector('.component-overview');
 
 		if (!els.section) return
 		setElements();
