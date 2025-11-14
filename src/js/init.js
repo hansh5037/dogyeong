@@ -5,6 +5,7 @@ import './common.carousel.js';
 import './gnb.js';
 import './kv.js';
 import './overview.js';
+import './hover.js';
 
 window.component = window.component || {};
 window.component.initialize = (function () {
@@ -15,6 +16,7 @@ window.component.initialize = (function () {
 		window.component.gnb.init();
 		window.component.kv.init();
 		window.component.overview.init();
+		window.component.hover.init();
 	};
 	
 	return {

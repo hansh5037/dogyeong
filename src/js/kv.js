@@ -23,11 +23,6 @@ window.component.kv = (function () {
         els.alphabetBottom = els.headlineBottom.querySelectorAll('span');
 
         els.eyebrow = els.section.querySelector('.js-eyebrow');
-
-        els.bg = els.section.querySelector('.js-background');
-        els.bgImg = els.bg.querySelector('img');
-
-        els.svg = els.section.querySelector('.js-svg');
     };
 
     const bindEvents = function () {
@@ -43,7 +38,7 @@ window.component.kv = (function () {
                 if (p.trackInside) {
                     eventsList.headlineTop(p, dir);
                     eventsList.headlineBottom(p, dir);
-					eventsList.rotateSvg(p);
+                    eventsList.typoAnimation(p);
                 }
             });
         }
@@ -75,6 +70,9 @@ window.component.kv = (function () {
                 if (dir === 'down') prog += gap;
                 span[i].style.transform = `scaleY(${scale})`;
             }
+        },
+        typoAnimation: function (p) {
+            // console.log(p.progress)
         },
         eyebrowChange: function () {
             const eyebrowChangeValue = ['UI/UX', 'FrontEnd', 'Web'];
