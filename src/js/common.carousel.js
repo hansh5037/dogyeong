@@ -55,7 +55,7 @@ window.component.commonCarousel = (function () {
 			this.carouselEventList.setPagination.call(this);
 		}
 		if (this.options.loop) {
-			this.carouselEventList.setLoopSlide.call(this);
+			this.carouselEventList.setCloneSlide.call(this);
 		}
 		this.carouselEventList.slideChange.call(this);
 		this.eventHandler.on.call(this);
@@ -79,7 +79,7 @@ window.component.commonCarousel = (function () {
 			this.els.carouselPagination?.addEventListener('click', this.handler.bulletClick);
 
 			// drag 
-			this.els.carouselWrap.addEventListener('pointerdown', this.handler.dragStart), {passive:false};
+			this.els.carouselWrap.addEventListener('pointerdown', this.handler.dragStart, {passive:false});
 			window.addEventListener('pointermove', this.handler.dragMove);
 			window.addEventListener('pointerup', this.handler.dragEnd);
 			window.addEventListener('pointercancel', this.handler.dragEnd);
@@ -115,7 +115,7 @@ window.component.commonCarousel = (function () {
 			}
 			this.els.carouselPaginationBullet = this.els.carouselPagination.querySelectorAll('.js-carousel-bullet');
 		},
-		moveToTransform: function () {
+		moveToTransform: function () { // clone이 아닌 슬라이드 위치(transform) 이동
 			let wrapperRect = this.els.carouselWrap.getBoundingClientRect().left;
 			let activeSlideRect = this.els.carouselSlides[this.activeIndex].getBoundingClientRect().left;
 			let rect = activeSlideRect - wrapperRect;
@@ -123,13 +123,12 @@ window.component.commonCarousel = (function () {
 			this.els.carouselWrap.style.transform = `translateX(-${rect}px)`;
 			return rect;
 		},
-		toggleActiveClass: function (list) {
+		toggleActiveClass: function (list) { // is-active 붙여주는 함수
 			for (let i = 0; i < list.length; i++) {
 				list[i].classList.toggle('is-active', i === this.activeIndex);
 			};
 		},
-		slideChange: function () {
-
+		slideChange: function () { // slide change일때 나타나는 함수들 실행
 			if (this.els.carouselPagination) {
 				this.carouselEventList.toggleActiveClass.call(this, this.els.carouselPaginationBullet);
 				this.accessibility.activeCurrentBullet.call(this);
@@ -146,7 +145,7 @@ window.component.commonCarousel = (function () {
 				this.options.onSlideChange(this.activeIndex);
 			}
 		},
-		setLoopSlide: function () {
+		setCloneSlide: function () { // clone slide 셋팅
 			const slideArray = this.els.slideArray,
 				lastIndex = this.els.lastIndex,
 				carouselWrap = this.els.carouselWrap;
@@ -163,21 +162,31 @@ window.component.commonCarousel = (function () {
 				clone.setAttribute('tabindex', '-1');
 			});
 
-			carouselWrap.prepend(clones[0], clones[1]);
+			carouselWrap.prepend(clones[1], clones[0]);
 			carouselWrap.append(clones[2], clones[3]);
 
-			this.els.loopClonePrev = clones[1];
+			this.els.loopClonePrev = clones[0];
 			this.els.loopCloneNext = clones[2];
 		},
-		moveToClone: function (type) {
-			const wrap = this.els.carouselWrap;
+		moveToClone: function (type, lastToFirst) {
 			const target = type === 'next' ? this.els.loopCloneNext : this.els.loopClonePrev;
-			
-			const wrapperRect = wrap.getBoundingClientRect().left;
+			const wrapperRect = this.els.carouselWrap.getBoundingClientRect().left;
 			const targetRect = target.getBoundingClientRect().left;
 			const diff = targetRect - wrapperRect;
-			
-			wrap.style.transform = `translateX(-${diff}px)`;
+			const prevTransition = this.els.carouselWrap.style.transition;
+			const duration = parseFloat(window.getComputedStyle(this.els.carouselWrap).transitionDuration) * 1000;
+
+			this.els.carouselWrap.style.transform = `translateX(-${diff}px)`;
+			setTimeout(() => {
+				this.els.carouselWrap.style.transition = 'none';
+				this.activeIndex = lastToFirst ? 0 : this.els.lastIndex;
+				this.carouselEventList.slideChange.call(this);
+
+				this.els.carouselWrap.style.transition = prevTransition;
+			}, duration);
+
+			this.drag.deltaX = 0;
+			return;
 		}
 	};
 
@@ -194,31 +203,14 @@ window.component.commonCarousel = (function () {
 				nextIndex -= 1;
 			}
 
-			const last = this.els.lastIndex;
 			const firstToLast = nextIndex < 0;
-			const lastToFirst = nextIndex > last;
+			const lastToFirst = nextIndex > this.els.lastIndex;
 
 			if (this.options.loop) {
-
 				if (firstToLast || lastToFirst) {
-					const prevTransition = this.els.carouselWrap.style.transition;
-
-					this.els.carouselWrap.style.transition = '';
-					this.carouselEventList.moveToClone.call(this, firstToLast? 'prev' : 'next');
-					setTimeout(() => {
-						this.els.carouselWrap.style.transition = 'none';
-						this.activeIndex = lastToFirst ? 0 : last;
-						this.carouselEventList.slideChange.call(this);
-
-						this.els.carouselWrap.offsetHeight;
-						this.els.carouselWrap.style.transition = prevTransition;
-					}, 600);
-
-					this.drag.deltaX = 0;
-					return;
+					this.carouselEventList.moveToClone.call(this, firstToLast? 'prev' : 'next', lastToFirst); return;
 				};
-
-			} else if (nextIndex < 0 || nextIndex > last) return;
+			} else if (nextIndex < 0 || nextIndex > this.els.lastIndex) return;
 
 			this.activeIndex = nextIndex;
 			this.carouselEventList.slideChange.call(this);
@@ -259,33 +251,16 @@ window.component.commonCarousel = (function () {
 			const threshold = this.els.slideWidth * microSlideRatio;
 
 			if (Math.abs(this.drag.deltaX) >= threshold) {
-				const dir = this.drag.deltaX < 0 ? 1 : -1; // 왼쪽 드래그 → 다음(+1)
+				const dir = this.drag.deltaX < 0 ? 1 : -1; 
 				let next = this.activeIndex + dir;
-				const last = this.els.lastIndex;
-				const lastToFirst = dir === 1 && this.activeIndex === last;
+				const lastToFirst = dir === 1 && this.activeIndex === this.els.lastIndex;
 				const firstToLast = dir === -1 && this.activeIndex === 0;
 
 				if (this.options.loop) {
-
 					if (firstToLast || lastToFirst) {
-						const prevTransition = this.els.carouselWrap.style.transition;
-
-						this.els.carouselWrap.style.transition = '';
-						this.carouselEventList.moveToClone.call(this, firstToLast? 'prev' : 'next');
-						setTimeout(() => {
-							this.els.carouselWrap.style.transition = 'none';
-							this.activeIndex = lastToFirst ? 0 : last;
-							this.carouselEventList.slideChange.call(this);
-
-							this.els.carouselWrap.offsetHeight;
-							this.els.carouselWrap.style.transition = prevTransition;
-						}, 600);
-
-						this.drag.deltaX = 0;
-						return;
+						this.carouselEventList.moveToClone.call(this, firstToLast? 'prev' : 'next', lastToFirst); return;
 					};
-
-				} else if (next < 0 || next > last) {
+				} else if (next < 0 || next > this.els.lastIndex) {
 					this.carouselEventList.moveToTransform.call(this);
 					this.drag.deltaX = 0;
 					return;
