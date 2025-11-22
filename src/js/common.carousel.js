@@ -12,6 +12,7 @@ window.component.commonCarousel = (function () {
 		};
 		this.options = {
 			container: opts.container ?? null,
+			loop: opts.loop ?? false,
 			onInit: opts.onInit ?? null,
 			onSlideChange: opts.onSlideChange ?? null
 		};
@@ -43,6 +44,7 @@ window.component.commonCarousel = (function () {
 	};
 
 	fn.setProperty = function () {
+		this.els.slideArray = [...this.els.carouselSlides];
 		this.els.lastIndex = this.els.carouselSlides.length - 1;
 		this.els.slideRect = this.els.carouselSlides[this.activeIndex].getBoundingClientRect();
 		this.els.slideWidth = this.els.slideRect.width;
@@ -51,6 +53,9 @@ window.component.commonCarousel = (function () {
 	fn.bindEvents = function () {
 		if (this.els.carouselPagination) {
 			this.carouselEventList.setPagination.call(this);
+		}
+		if (this.options.loop) {
+			this.carouselEventList.setLoopSlide.call(this);
 		}
 		this.carouselEventList.slideChange.call(this);
 		this.eventHandler.on.call(this);
@@ -67,7 +72,7 @@ window.component.commonCarousel = (function () {
 				dragMove: this.dragEventList.onDragMove.bind(this),
 				dragEnd: this.dragEventList.onDragEnd.bind(this)
 			}
-		
+
 			// click
 			this.els.carouselNextArrow?.addEventListener('click', this.handler.arrowClick);
 			this.els.carouselPrevArrow?.addEventListener('click', this.handler.arrowClick);
@@ -92,7 +97,7 @@ window.component.commonCarousel = (function () {
 			window.removeEventListener('pointerup', this.handler.dragEnd);
 			window.removeEventListener('pointercancel', this.handler.dragEnd);
 
-			this.handler=null
+			this.handler = null
 		}
 	};
 
@@ -103,7 +108,7 @@ window.component.commonCarousel = (function () {
 				const bulletButton = document.createElement('button');
 				bulletButton.type = 'button';
 				bulletButton.className = `js-carousel-bullet${i === 0 ? ' is-active' : ''}`;
-				bulletButton.setAttribute('aria-label', i+1 +'/'+this.els.carouselSlides.length);
+				bulletButton.setAttribute('aria-label', i + 1 + '/' + this.els.carouselSlides.length);
 
 				this.els.carouselPagination.append(bulletButtonWrap);
 				bulletButtonWrap.append(bulletButton);
@@ -124,12 +129,12 @@ window.component.commonCarousel = (function () {
 			};
 		},
 		slideChange: function () {
-		
+
 			if (this.els.carouselPagination) {
 				this.carouselEventList.toggleActiveClass.call(this, this.els.carouselPaginationBullet);
 				this.accessibility.activeCurrentBullet.call(this);
 			}
-			if (this.els.carouselNavigation) {
+			if (this.els.carouselNavigation && !this.options.loop) {
 				this.accessibility.updateDisabledArrow.call(this);
 			}
 
@@ -140,6 +145,39 @@ window.component.commonCarousel = (function () {
 			if (typeof this.options.onSlideChange === 'function') {
 				this.options.onSlideChange(this.activeIndex);
 			}
+		},
+		setLoopSlide: function () {
+			const slideArray = this.els.slideArray,
+				lastIndex = this.els.lastIndex,
+				carouselWrap = this.els.carouselWrap;
+
+			const clones = [
+				slideArray[lastIndex].cloneNode(true),
+				slideArray[lastIndex - 1].cloneNode(true),
+				slideArray[0].cloneNode(true),
+				slideArray[1].cloneNode(true)
+			];
+
+			clones.forEach(clone => {
+				clone.setAttribute('aria-hidden', true);
+				clone.setAttribute('tabindex', '-1');
+			});
+
+			carouselWrap.prepend(clones[0], clones[1]);
+			carouselWrap.append(clones[2], clones[3]);
+
+			this.els.loopClonePrev = clones[1];
+			this.els.loopCloneNext = clones[2];
+		},
+		moveToClone: function (type) {
+			const wrap = this.els.carouselWrap;
+			const target = type === 'next' ? this.els.loopCloneNext : this.els.loopClonePrev;
+			
+			const wrapperRect = wrap.getBoundingClientRect().left;
+			const targetRect = target.getBoundingClientRect().left;
+			const diff = targetRect - wrapperRect;
+			
+			wrap.style.transform = `translateX(-${diff}px)`;
 		}
 	};
 
@@ -149,15 +187,40 @@ window.component.commonCarousel = (function () {
 			const isPrev = event.currentTarget === this.els.carouselPrevArrow;
 
 			let nextIndex = this.activeIndex;
+
 			if (isNext) {
 				nextIndex += 1;
 			} else if (isPrev) {
 				nextIndex -= 1;
 			}
 
-			if (nextIndex < 0 || nextIndex > this.els.lastIndex) return;
-			this.activeIndex = nextIndex;
+			const last = this.els.lastIndex;
+			const firstToLast = nextIndex < 0;
+			const lastToFirst = nextIndex > last;
 
+			if (this.options.loop) {
+
+				if (firstToLast || lastToFirst) {
+					const prevTransition = this.els.carouselWrap.style.transition;
+
+					this.els.carouselWrap.style.transition = '';
+					this.carouselEventList.moveToClone.call(this, firstToLast? 'prev' : 'next');
+					setTimeout(() => {
+						this.els.carouselWrap.style.transition = 'none';
+						this.activeIndex = lastToFirst ? 0 : last;
+						this.carouselEventList.slideChange.call(this);
+
+						this.els.carouselWrap.offsetHeight;
+						this.els.carouselWrap.style.transition = prevTransition;
+					}, 600);
+
+					this.drag.deltaX = 0;
+					return;
+				};
+
+			} else if (nextIndex < 0 || nextIndex > last) return;
+
+			this.activeIndex = nextIndex;
 			this.carouselEventList.slideChange.call(this);
 		},
 		onBulletClick: function (event) {
@@ -168,7 +231,7 @@ window.component.commonCarousel = (function () {
 			this.activeIndex = clickBulletIndex;
 
 			this.carouselEventList.slideChange.call(this);
-		}				
+		}
 	};
 
 	fn.dragEventList = {
@@ -196,15 +259,44 @@ window.component.commonCarousel = (function () {
 			const threshold = this.els.slideWidth * microSlideRatio;
 
 			if (Math.abs(this.drag.deltaX) >= threshold) {
-				let next = this.activeIndex + (this.drag.deltaX < 0 ? 1 : -1);
+				const dir = this.drag.deltaX < 0 ? 1 : -1; // 왼쪽 드래그 → 다음(+1)
+				let next = this.activeIndex + dir;
+				const last = this.els.lastIndex;
+				const lastToFirst = dir === 1 && this.activeIndex === last;
+				const firstToLast = dir === -1 && this.activeIndex === 0;
 
-				if (next <= this.els.lastIndex && next >= 0) {
-					if (next !== this.activeIndex) {
-						this.activeIndex = next;
+				if (this.options.loop) {
+
+					if (firstToLast || lastToFirst) {
+						const prevTransition = this.els.carouselWrap.style.transition;
+
+						this.els.carouselWrap.style.transition = '';
+						this.carouselEventList.moveToClone.call(this, firstToLast? 'prev' : 'next');
+						setTimeout(() => {
+							this.els.carouselWrap.style.transition = 'none';
+							this.activeIndex = lastToFirst ? 0 : last;
+							this.carouselEventList.slideChange.call(this);
+
+							this.els.carouselWrap.offsetHeight;
+							this.els.carouselWrap.style.transition = prevTransition;
+						}, 600);
+
+						this.drag.deltaX = 0;
+						return;
 					};
+
+				} else if (next < 0 || next > last) {
+					this.carouselEventList.moveToTransform.call(this);
+					this.drag.deltaX = 0;
+					return;
+				}
+
+				if (next !== this.activeIndex) {
+					this.activeIndex = next;
 					this.carouselEventList.slideChange.call(this);
 				}
 			}
+
 			this.carouselEventList.moveToTransform.call(this);
 			this.drag.deltaX = 0;
 		}
@@ -214,7 +306,7 @@ window.component.commonCarousel = (function () {
 		updateDisabledArrow: function () {
 			const activeFirstSlide = 0 === this.activeIndex;
 			const activeLastSlide = this.els.lastIndex === this.activeIndex;
-			
+
 			this.els.carouselPrevArrow.setAttribute('aria-disabled', activeFirstSlide ? 'true' : 'false');
 			this.els.carouselNextArrow.setAttribute('aria-disabled', activeLastSlide ? 'true' : 'false');
 		},
