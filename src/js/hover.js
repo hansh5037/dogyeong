@@ -46,7 +46,6 @@ window.component.hover = (function () {
                 setTimeout (() => {
                     els.buttons[i].classList.toggle('is-show', y < height && Math.abs(y) < height);
                 }, i*200);
-                console.log(i+200)
 
                 if (Math.abs(y) > height) {
                     els.buttons[i].closest('.component-hover__box').classList.remove('is-active');

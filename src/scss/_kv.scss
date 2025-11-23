@@ -1,5 +1,5 @@
 .component-kv {
-	background: linear-gradient(178deg, #605171 1%, #30304e 70%, #212532 100%);
+	background: linear-gradient(178deg, #605171 1%, #30304e 70%, var(--black) 100%);
 	&__wrap {
 		display: flex;
 		flex-direction: column;
@@ -45,7 +45,20 @@
 			grid-row: 2;
 			width: 100%;
 			padding: 10px 0;
+			font-size: 280px;
+			@media screen and (max-width: 1280px) {
+				font-size: 260px;
+			}	
+			@media screen and (min-width: 1920px) {
+				font-size: 350px;
+			}
 			&--bottom {
+				.component-kv__headline-text {
+					transform: scaleY(0);
+					transform-origin: bottom;
+				}
+			}
+			&--meddle {
 				.component-kv__headline-text {
 					transform: scaleY(0);
 					transform-origin: bottom;
@@ -60,18 +73,13 @@
 		&-text {
 			position: relative;
 			display: inline-block;
-			font-size: 280px;
-			@media screen and (max-width: 1280px) {
-				font-size: 260px;
-			}	
-			line-height: 1;
+			line-height: 1.2;
 			font-family: "Fjalla One", sans-serif;
 			color: var(--pink);
-			letter-spacing: -.03em;
+			    font-size: inherit;
+			letter-spacing: -.02em;
 			transition-duration: .2s;
-			@media screen and (min-width: 1920px) {
-				font-size: 350px;
-			}
+			will-change: transform;
 		}
 	}
 	&__image {
@@ -107,10 +115,10 @@
 	.component-kv {
 		&__headline {
 			margin-top: 40px;
-			&-text {
+			&-position {
 				font-size: 180px;
-			}
-		}		
+			}		
+		}
 	}
 }
 	
@@ -118,7 +126,7 @@
 	.component-kv {
 		&__headline {
 			margin-top: 30px;
-			&-text {
+			&-position {
 				font-size: 24vw;
 			}
 		}

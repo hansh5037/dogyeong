@@ -84,7 +84,7 @@ img, video, picture {
 		&-inner {
 			position: sticky;
 			top: var(--gnb-height);
-			height: calc(100svh - var(--gnb-height));
+			height: calc(100vh - var(--gnb-height));
 			overflow: hidden;
 		}
 	}
