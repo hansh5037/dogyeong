@@ -49,8 +49,9 @@ window.component.commonCarousel = (function () {
 	fn.setProperty = function () {
 		this.state.slideArray = [...this.els.carouselSlides];
 		this.state.lastIndex = this.els.carouselSlides.length - 1;
-		this.state.slideRect = this.els.carouselSlides[this.activeIndex].getBoundingClientRect();
-		this.state.slideWidth = this.state.slideRect.width;
+		this.state.slideWidth = this.els.carouselSlides[this.activeIndex].getBoundingClientRect().width;
+		this.state.bulletArray = null;
+		this.state.bulletLastIndex = null;
 	};
 
 	fn.bindEvents = function () {
@@ -105,19 +106,40 @@ window.component.commonCarousel = (function () {
 	};
 
 	fn.carouselEventList = {
-		setPagination: function () {
-			for (let i = 0; i < this.els.carouselSlides.length; i++) {
+		getSlidePerView: function () {
+			const wrapWidth = this.els.carouselWrap.getBoundingClientRect().width;
+			const firstSlide = this.state.slideArray[0].getBoundingClientRect().left;
+			const secondSlide = this.state.slideArray[1].getBoundingClientRect().left;
+			const step = secondSlide - firstSlide;
+			
+			return Math.round(wrapWidth / step);
+		},
+		createPagination: function (paginationLength) {
+			for (let i = 0; i < paginationLength; i++) {
 				const bulletButtonWrap = document.createElement('li');
 				const bulletButton = document.createElement('button');
 				
 				bulletButton.type = 'button';
 				bulletButton.className = `js-carousel-bullet${i === 0 ? ' is-active' : ''}`;
-				bulletButton.setAttribute('aria-label', i + 1 + '/' + this.els.carouselSlides.length);
+				bulletButton.setAttribute('aria-label', i + 1 + '/' + paginationLength);
 
 				this.els.carouselPagination.append(bulletButtonWrap);
 				bulletButtonWrap.append(bulletButton);
 			}
+		},
+		setPagination: function () { 
+			const slidePerView = this.carouselEventList.getSlidePerView.call(this);
+			const multiSlidePagination = this.els.carouselSlides.length - (slidePerView - 1);
+
+				if (!this.options.loop && slidePerView > 1) {
+					this.carouselEventList.createPagination.call(this, multiSlidePagination)
+				} else {
+					this.carouselEventList.createPagination.call(this, this.els.carouselSlides.length)
+				}
 			this.els.carouselPaginationBullet = this.els.carouselPagination.querySelectorAll('.js-carousel-bullet');
+
+			this.state.bulletArray = [...this.els.carouselPaginationBullet];
+			this.state.bulletLastIndex = this.els.carouselPaginationBullet.length - 1;
 		},
 		setLoopClones: function () { // loop용 clone slide 셋팅
 			const clones = [
@@ -137,6 +159,8 @@ window.component.commonCarousel = (function () {
 
 			this.els.loopClonePrev = clones[0];
 			this.els.loopCloneNext = clones[2];
+
+			this.els.loopClones = clones;
 		},
 		moveToTransform: function () { // clone이 아닌 슬라이드 위치(transform) 이동
 			const wrapperRect = this.els.carouselWrap.getBoundingClientRect().left;
@@ -151,18 +175,19 @@ window.component.commonCarousel = (function () {
 			const wrapperRect = this.els.carouselWrap.getBoundingClientRect().left;
 			const targetRect = target.getBoundingClientRect().left;
 			const diff = targetRect - wrapperRect;
-			const prevTransition = this.els.carouselWrap.style.transition;
 			const duration = parseFloat(window.getComputedStyle(this.els.carouselWrap).transitionDuration) * 1000;
 
 			this.els.carouselWrap.style.transform = `translateX(-${diff}px)`; // clone slide로 이동
 
 			// 실제 슬라이드로 이동(빠르게)
 			setTimeout(() => {
-				this.els.carouselWrap.style.transition = 'none';
+				this.els.carouselWrap.classList.add('is-jump');
 				this.activeIndex = lastToFirst ? 0 : this.state.lastIndex;
 				this.carouselEventList.slideChange.call(this);
 
-				this.els.carouselWrap.style.transition = prevTransition;
+				requestAnimationFrame(() => {
+					this.els.carouselWrap.classList.remove('is-jump');
+				});
 			}, duration);
 
 			if (this.drag) {
@@ -279,8 +304,8 @@ window.component.commonCarousel = (function () {
 
 	fn.accessibility = {
 		updateDisabledArrow: function () {
-			const activeFirstSlide = 0 === this.activeIndex;
-			const activeLastSlide = this.state.lastIndex === this.activeIndex;
+			const activeFirstSlide = this.state.bulletArray[0].classList.contains('is-active');
+			const activeLastSlide = this.state.bulletArray[this.state.bulletLastIndex].classList.contains('is-active');
 
 			this.els.carouselPrevArrow.setAttribute('aria-disabled', activeFirstSlide ? 'true' : 'false');
 			this.els.carouselNextArrow.setAttribute('aria-disabled', activeLastSlide ? 'true' : 'false');
@@ -301,7 +326,16 @@ window.component.commonCarousel = (function () {
 	fn.destroy = function () {
 		this.eventHandler.off.call(this)
 		this.els.carouselWrap.style.transform = '';
-
+		if (this.options.loop) {
+			this.els.loopClones.forEach(clone => {
+				if (clone && clone.parentNode === this.els.carouselWrap) {
+					this.els.carouselWrap.removeChild(clone);
+				}
+			});
+			this.els.loopClones = null;
+			this.els.loopClonePrev = null;
+			this.els.loopCloneNext = null;
+		}
 		for (let i = 0; i < this.els.carouselSlides.length; i++) {
 			this.els.carouselSlides[i].classList.remove('is-active');
 		};
