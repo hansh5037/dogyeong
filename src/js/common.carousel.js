@@ -50,6 +50,8 @@ window.component.commonCarousel = (function () {
 		this.state.slideArray = [...this.els.carouselSlides];
 		this.state.lastIndex = this.els.carouselSlides.length - 1;
 		this.state.slideWidth = this.els.carouselSlides[this.activeIndex].getBoundingClientRect().width;
+		this.state.perView = this.carouselEventList.getSlidePerView.call(this);
+		this.state.multiSlide = this.state.perView >  1;
 		this.state.bulletArray = null;
 		this.state.bulletLastIndex = null;
 	};
@@ -121,17 +123,16 @@ window.component.commonCarousel = (function () {
 				
 				bulletButton.type = 'button';
 				bulletButton.className = `js-carousel-bullet${i === 0 ? ' is-active' : ''}`;
-				bulletButton.setAttribute('aria-label', i + 1 + '/' + paginationLength);
+				this.accessibility.setBulletLable.call(this, i, bulletButton, paginationLength);
 
 				this.els.carouselPagination.append(bulletButtonWrap);
 				bulletButtonWrap.append(bulletButton);
 			}
 		},
 		setPagination: function () { 
-			const slidePerView = this.carouselEventList.getSlidePerView.call(this);
-			const multiSlidePagination = this.els.carouselSlides.length - (slidePerView - 1);
+			const multiSlidePagination = this.els.carouselSlides.length - (this.state.perView - 1);
 
-				if (!this.options.loop && slidePerView > 1) {
+				if (!this.options.loop && this.state.multiSlide) {
 					this.carouselEventList.createPagination.call(this, multiSlidePagination)
 				} else {
 					this.carouselEventList.createPagination.call(this, this.els.carouselSlides.length)
@@ -284,7 +285,7 @@ window.component.commonCarousel = (function () {
 					if (firstToLast || lastToFirst) {
 						this.carouselEventList.moveToClone.call(this, firstToLast? 'prev' : 'next', lastToFirst); return;
 					};
-				} else if (next < 0 || next > this.state.lastIndex) {
+				} else if (next < 0 || next > this.state.bulletLastIndex) {
 					this.carouselEventList.moveToTransform.call(this);
 					this.drag.deltaX = 0;
 					return;
@@ -320,6 +321,14 @@ window.component.commonCarousel = (function () {
 				this.els.carouselSlides[i].setAttribute('aria-hidden', i === this.activeIndex ? 'false' : 'true');
 				this.els.carouselSlides[i].setAttribute('tabindex', i === this.activeIndex ? '0' : '-1');
 			};
+		},
+		setBulletLable: function (i, bulletButton, paginationLength) {
+			if (this.state.multiSlide) {
+				bulletButton.setAttribute('aria-label', paginationLength + '개 슬라이드 중' + (i + 1) + '번 슬라이드 선택됨, ' + (i + 1) + '번' + (this.state.perView+i) + '번 슬라이드 보임' );
+			} else {
+				bulletButton.setAttribute('aria-label', paginationLength + '개 슬라이드 중' + (i + 1) + '번 슬라이드 선택됨');
+			}
+
 		}
 	};
 
