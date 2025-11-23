@@ -5,6 +5,9 @@
 		transition: ease-out;
 		transition-duration: .6s;
 		touch-action: pan-y;
+		&.is-jump {
+			transition: none !important;
+		}
 	}
 	&-slide {
 		position: relative;
@@ -62,8 +65,8 @@
 		padding: 0;
 		color: #fff;
 		&.is-active {}
+		}
 	}
-}
 
 @media screen and (max-width: 768px) {
 	.js-carousel {
